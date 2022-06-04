@@ -1,0 +1,49 @@
+.Login {
+    width: 50%;
+    margin: 20vh auto 0;
+    text-align: center;
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: 0 25%;
+        justify-items: center;
+        justify-content: space-around;
+
+        input {
+            height: 5vh;
+            margin-top: 1.5vh;
+            font-size: 1.1rem;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: row;
+
+            padding: unset;
+            margin: 0 auto;
+            li {
+                list-style: none;
+
+                padding: 0 1vw;
+                margin: 1vh auto;
+                border-right: 1px solid #ccc;
+
+                a {
+                    color: #000;
+                    text-decoration: unset;
+                    font-size: 0.85rem;
+                    margin-top: 1.5vh;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
+                &:last-child {
+                    border-right: none;
+                }
+            }
+        }
+    }
+}

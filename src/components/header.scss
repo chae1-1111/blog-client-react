@@ -1,0 +1,59 @@
+.Header {
+    width: 100%;
+    margin: 0 auto;
+    border-bottom: 1px solid #ccc;
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .Header-left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .logo-area {
+            width: 70px;
+            height: 70px;
+
+            font-size: 65px;
+            padding: 2.5px;
+            box-sizing: border-box;
+
+            color: #333;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: row;
+            font-size: 1rem;
+            align-items: center;
+
+            a {
+                margin-left: 2vw;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .Header-right {
+        display: flex;
+        align-items: center;
+        .login-area {
+            width: 10vw;
+            height: 3vw;
+            border-radius: 3vw;
+            background-color: #777;
+            color: #fff;
+            text-align: center;
+            line-height: 3vw;
+            text-decoration: unset;
+
+            &:hover {
+                background-color: #444;
+            }
+        }
+    }
+}
