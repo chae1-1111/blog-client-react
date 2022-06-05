@@ -16,7 +16,7 @@ function Login(props: propsType) {
         let userpw = (document.querySelector("#userpw") as HTMLInputElement)
             .value;
         let result = await axios.get(
-            `http://dla4212.iptime.org:3000/member/general?userid=${userid}&userpw=${userpw}`,
+            `https://blog-api.chaewon.me/member/general?userid=${userid}&userpw=${userpw}`,
             { headers: { Authorization: `${apikey.apikey}` } }
         );
 
