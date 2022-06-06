@@ -17,6 +17,8 @@ const EmailAuth = (props: emailAuthProps) => {
     const [authCode, setAuthCode] = useState("");
     const [buttonState, setButtonState] = useState(false);
 
+    const regEmail = /^\w+([\.-]?\w+)*@\w+([\.0]?\w+)*(\.\w{2,3})+$/;
+
     const sendEmail: Function = async () => {
         setButtonState(true);
         const email = (document.querySelector("#_email") as HTMLInputElement)
@@ -24,6 +26,10 @@ const EmailAuth = (props: emailAuthProps) => {
 
         if (email.length === 0) {
             alert("이메일을 입력해주세요.");
+            setButtonState(false);
+            return;
+        } else if (!regEmail.test(email)) {
+            alert("올바른 이메일을 입력해주세요.");
             setButtonState(false);
             return;
         }

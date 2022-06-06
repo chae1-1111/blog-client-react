@@ -1,25 +1,47 @@
-interface user {
-    userid: HTMLInputElement;
-    userpw: HTMLInputElement;
-    userpw_check: HTMLInputElement;
-    email: HTMLInputElement;
-    name: HTMLInputElement;
-}
+import axios from "axios";
+import config from "../../config/config.json";
 
-interface result {
+interface user {
     userid?: string;
     userpw?: string;
     userpw_check?: string;
     email?: string;
-    name?: string;
 }
 
-const joinCheck: Function = (user: user) => {
-    let result:result = {};
-    if (user.userid.value.trim().length === 0) {
-        result.userid = "아이디를 입력해주세요.";
-    }
-    
-};
+export const joinCheck: Function = async (user: user) => {
+    let result: user = {};
 
-export default joinCheck;
+    let regId = /^[a-zA-Z0-9]{4,12}$/;
+    let regPw = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[~!@#$%^&*<>?]).{8,20}$/;
+
+    let idCheck = await axios.get(
+        `${config.baseurl}/member/general?userid=${user.userid}`,
+        { headers: { Authorization: `${config.apikey}` } }
+    );
+
+    if (user.userid!.trim().length === 0) {
+        result.userid = "아이디를 입력해주세요.";
+    } else if (!regId.test(user.userid!)) {
+        result.userid =
+            "아이디는 4자 이상 12자 이하의 영문 대소문자와 숫자로만 입력해주세요.";
+    } else if (!idCheck.data.result) {
+        result.userid = "이미 가입된 아이디입니다.";
+    }
+
+    if (user.userpw!.trim().length === 0) {
+        result.userpw = "비밀번호를 입력해주세요.";
+    } else if (!regPw.test(user.userpw!)) {
+        result.userpw =
+            "비밀번호는 8자 이상 20자 이하의 영문 대소문자와 숫자, 특수문자를 포함해주세요.";
+    }
+
+    if (user.userpw! !== user.userpw_check!) {
+        result.userpw_check = "비밀번호가 일치하지 않습니다.";
+    }
+
+    if (user.email!.trim().length === 0) {
+        result.email = "이메일 인증이 필요합니다.";
+    }
+
+    return result;
+};
