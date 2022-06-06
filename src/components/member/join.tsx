@@ -15,7 +15,13 @@ function Join(props: propsType) {
     const [email, setEmail] = useState("");
 
     const join: Function = async () => {
-        console.log("회원가입");
+        const userid = document.getElementById("userid") as HTMLInputElement;
+        const userpw = document.getElementById("userpw") as HTMLInputElement;
+        const userpw_chack = document.getElementById("userpw_check") as HTMLInputElement;
+        const email = document.getElementById("email") as HTMLInputElement;
+        const name = document.getElementById("name") as HTMLInputElement;
+
+        
     };
 
     return (

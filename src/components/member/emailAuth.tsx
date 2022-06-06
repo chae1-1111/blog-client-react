@@ -38,7 +38,7 @@ const EmailAuth = (props: emailAuthProps) => {
 
         console.log(result);
         if (result.status === 201 && result.data.errorCode === "MEM001") {
-            alert("중복된 이메일입니다.");
+            alert("이미 가입된 이메일입니다.");
             setButtonState(false);
             return;
         } else if (result.status === 200) {
