@@ -10,7 +10,22 @@
 
     .EmailAuth {
         width: 40%;
+        height: 40vh;
         margin: 0 auto;
         background-color: #fff;
+        border-radius: 20px;
+
+        .input-wrap {
+            display: flex;
+            flex-direction: column;
+            width: 60%;
+            margin: 0 auto;
+
+            input {
+                height: 5vh;
+                margin-top: 1.5vh;
+                font-size: 1.1rem;
+            }
+        }
     }
 }

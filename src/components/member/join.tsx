@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import apikey from "../../auth/apikey.json";
+import config from "../../config/config.json";
 import EmailAuth from "./emailAuth";
 
 import "./join.scss";

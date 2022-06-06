@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import apikey from "../../auth/apikey.json";
+import config from "../../config/config.json";
 
 import "./login.scss";
 
@@ -16,8 +16,8 @@ function Login(props: propsType) {
         let userpw = (document.querySelector("#userpw") as HTMLInputElement)
             .value;
         let result = await axios.get(
-            `https://blog-api.chaewon.me/member/general?userid=${userid}&userpw=${userpw}`,
-            { headers: { Authorization: `${apikey.apikey}` } }
+            `${config.baseurl}/member/general?userid=${userid}&userpw=${userpw}`,
+            { headers: { Authorization: `${config.apikey}` } }
         );
 
         if (result.data.status === 200) {
