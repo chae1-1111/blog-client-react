@@ -9,6 +9,7 @@
     align-items: center;
 
     .EmailAuth {
+        position: relative;
         width: 40%;
         height: 40vh;
         margin: 0 auto;
@@ -26,6 +27,20 @@
                 margin-top: 1.5vh;
                 font-size: 1.1rem;
             }
+        }
+
+        .exit-icon {
+            position: absolute;
+            top: 1vh;
+            right: 1vh;
+            width: 5vh;
+            height: 5vh;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
         }
     }
 }

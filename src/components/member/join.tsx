@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useState } from "react";
 
 import config from "../../config/config.json";
 import EmailAuth from "./emailAuth";
@@ -10,6 +11,9 @@ interface propsType {
 }
 
 function Join(props: propsType) {
+    const [emailAuth, setEmailAuth] = useState(false);
+    const [email, setEmail] = useState("");
+
     const join: Function = async () => {
         console.log("회원가입");
     };
@@ -35,6 +39,8 @@ function Join(props: propsType) {
                             type="text"
                             id="email"
                             placeholder="이메일"
+                            value={email}
+                            onClick={() => setEmailAuth(true)}
                             readOnly
                         />
                         <input type="text" id="name" placeholder="이름" />
@@ -49,7 +55,9 @@ function Join(props: propsType) {
             ) : (
                 <script>window.location.href = "./";</script>
             )}
-            <EmailAuth />
+            {emailAuth ? (
+                <EmailAuth setEmailAuth={setEmailAuth} setEmail={setEmail} />
+            ) : null}
         </div>
     );
 }
