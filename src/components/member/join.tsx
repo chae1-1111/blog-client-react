@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 
 import config from "../../config/config.json";
+import SelectKeyword from "./selectKeyword";
 import EmailAuth from "./emailAuth";
 import { joinCheck } from "./joinCheck";
 
@@ -19,8 +20,11 @@ interface disableType {
 }
 
 function Join(props: propsType) {
+    const [selectKeyword, setSelectKeyword] = useState(false);
     const [emailAuth, setEmailAuth] = useState(false);
     const [email, setEmail] = useState("");
+
+    const [keywords, setKeywords] = useState([] as string[]);
 
     const [disable, setDisable] = useState({} as disableType);
 
@@ -32,12 +36,14 @@ function Join(props: propsType) {
         ) as HTMLInputElement;
         const email = document.getElementById("email") as HTMLInputElement;
         const name = document.getElementById("name") as HTMLInputElement;
+        const birth = document.getElementById("birth") as HTMLInputElement;
 
         let user = {
             userid: userid.value,
             userpw: userpw.value,
             userpw_check: userpw_check.value,
             email: email.value,
+            keywords: keywords,
         };
 
         const result = await joinCheck(user);
@@ -46,6 +52,25 @@ function Join(props: propsType) {
             return;
         } else {
             setDisable({});
+            const res = await axios.post(
+                `${config.baseurl}/member/general`,
+                {
+                    userid: userid.value,
+                    userpw: userpw.value,
+                    email: email.value,
+                    name: name.value !== "" ? name.value : null,
+                    birthday: birth.value,
+                    keyword: keywords,
+                },
+                { headers: { Authorization: `${config.apikey}` } }
+            );
+
+            if (res.status === 200) {
+                alert("회원가입 성공");
+                window.location.href = "./login";
+            } else {
+                alert("회원가입 실패");
+            }
         }
     };
 
@@ -122,6 +147,22 @@ function Join(props: propsType) {
                         <input type="text" id="name" placeholder="이름" />
 
                         <input
+                            type="date"
+                            id="birth"
+                            max={new Date().toLocaleDateString("en-ca")}
+                            placeholder="생년월일"
+                        />
+                        <input
+                            type="text"
+                            id="keyword"
+                            placeholder="관심 키워드 설정"
+                            onClick={() => {
+                                setSelectKeyword(true);
+                            }}
+                            value={keywords.join(", ")}
+                            readOnly
+                        />
+                        <input
                             type="button"
                             onClick={() => join()}
                             value="회원가입"
@@ -133,6 +174,13 @@ function Join(props: propsType) {
             )}
             {emailAuth ? (
                 <EmailAuth setEmailAuth={setEmailAuth} setEmail={setEmail} />
+            ) : null}
+            {selectKeyword ? (
+                <SelectKeyword
+                    keywords={keywords}
+                    setKeywords={setKeywords}
+                    setSelectKeyword={setSelectKeyword}
+                />
             ) : null}
         </div>
     );

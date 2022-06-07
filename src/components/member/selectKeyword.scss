@@ -1,0 +1,66 @@
+.wrap {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: rgba($color: #000, $alpha: 0.8);
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+
+    .SelectKeyword {
+        position: relative;
+        width: 40%;
+        min-width: 500px;
+        height: 55vh;
+        margin: 0 auto;
+        background-color: #fff;
+        border-radius: 20px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+
+        .keywords {
+            width: 95%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            .keyword {
+                padding: 0.5em 0.6em;
+                border: 1px solid #ccc;
+                border-radius: 1.5em;
+                margin: 0.2em 0.5em;
+            }
+
+            .selected {
+                border: 2px solid #aaa;
+                background-color: #ddd;
+            }
+        }
+
+        input[type="button"] {
+            height: 5vh;
+            font-size: 1rem;
+            border: 1px solid #000;
+            border-radius: 2vh;
+        }
+
+        .exit-icon {
+            position: absolute;
+            top: 1vh;
+            right: 1vh;
+            width: 5vh;
+            height: 5vh;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+    }
+}
