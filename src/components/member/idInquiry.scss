@@ -1,0 +1,32 @@
+.Login {
+    width: 50%;
+    margin: 20vh auto 0;
+    text-align: center;
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: 0 25%;
+        justify-items: center;
+        justify-content: space-around;
+
+        input {
+            height: 5vh;
+            margin-top: 1.5vh;
+            font-size: 1.1rem;
+            border: 2px solid #000;
+            border-radius: 1vh;
+        }
+        input.error {
+            border-color: red;
+            font-size: 1.1rem;
+        }
+
+        p.disable {
+            color: red;
+            font-size: 0.8rem;
+            margin: unset;
+            text-align: left;
+        }
+    }
+}

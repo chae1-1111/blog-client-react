@@ -4,6 +4,7 @@ import "./App.scss";
 import Header from "./components/header";
 import Join from "./components/member/join";
 import Login from "./components/member/login";
+import IdInquiry from "./components/member/idInquiry";
 
 function App() {
     const [isLogin, setIsLogin] = React.useState(false);
@@ -24,6 +25,10 @@ function App() {
                         }
                     />
                     <Route path="/join" element={<Join isLogin={isLogin} />} />
+                    <Route
+                        path="/idInquiry"
+                        element={<IdInquiry isLogin={isLogin} />}
+                    />
                 </Routes>
             </div>
         </BrowserRouter>
