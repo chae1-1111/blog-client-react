@@ -1,9 +1,9 @@
-import axios from "axios";
 import "./selectKeyword.scss";
 
 import { FaTimes } from "react-icons/fa";
 
 import keywords from "./keywords.json";
+import { useState } from "react";
 
 interface selectKeywordProps {
     keywords: string[];
@@ -12,6 +12,8 @@ interface selectKeywordProps {
 }
 
 const EmailAuth = (props: selectKeywordProps) => {
+    const [selected, setSelected] = useState(props.keywords);
+
     return (
         <div className="wrap">
             <div className="SelectKeyword">
@@ -21,28 +23,23 @@ const EmailAuth = (props: selectKeywordProps) => {
                         {keywords.keywords.map((keyword, index) => (
                             <div
                                 className={
-                                    props.keywords.indexOf(keyword) === -1
+                                    selected.indexOf(keyword) === -1
                                         ? "keyword"
                                         : "keyword selected"
                                 }
                                 key={index}
                                 onClick={() => {
-                                    if (
-                                        props.keywords.indexOf(keyword) === -1
-                                    ) {
-                                        if (props.keywords.length === 10) {
+                                    if (selected.indexOf(keyword) === -1) {
+                                        if (selected.length === 10) {
                                             alert(
                                                 "10개까지만 선택 가능합니다."
                                             );
                                         } else {
-                                            props.setKeywords([
-                                                ...props.keywords,
-                                                keyword,
-                                            ]);
+                                            setSelected([...selected, keyword]);
                                         }
                                     } else {
-                                        props.setKeywords(
-                                            props.keywords.filter(
+                                        setSelected(
+                                            selected.filter(
                                                 (i) => i !== keyword
                                             )
                                         );
@@ -58,6 +55,7 @@ const EmailAuth = (props: selectKeywordProps) => {
                     <input
                         type="button"
                         onClick={() => {
+                            props.setKeywords(selected);
                             props.setSelectKeyword(false);
                         }}
                         value="확인"

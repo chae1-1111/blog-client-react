@@ -5,6 +5,8 @@ import Header from "./components/header";
 import Join from "./components/member/join";
 import Login from "./components/member/login";
 import IdInquiry from "./components/member/idInquiry";
+import PwInquiry from "./components/member/pwInquiry";
+import ResetPw from "./components/member/resetPw";
 
 function App() {
     const [isLogin, setIsLogin] = React.useState(false);
@@ -28,6 +30,14 @@ function App() {
                     <Route
                         path="/idInquiry"
                         element={<IdInquiry isLogin={isLogin} />}
+                    />
+                    <Route
+                        path="/pwInquiry"
+                        element={<PwInquiry isLogin={isLogin} />}
+                    />
+                    <Route
+                        path="/resetPw"
+                        element={<ResetPw isLogin={isLogin} />}
                     />
                 </Routes>
             </div>
