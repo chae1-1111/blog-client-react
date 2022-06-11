@@ -1,10 +1,24 @@
 .App {
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
     position: relative;
 }
 
 body {
     margin: unset;
+}
+
+.content-wrap {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #f4f5f6;
+    position: relative;
+    min-height: 90vh;
+
+    .content {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        z-index: 10;
+    }
 }

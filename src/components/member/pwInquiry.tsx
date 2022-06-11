@@ -60,7 +60,9 @@ function PwInquiry(props: propsType) {
         );
 
         if (result.status === 200) {
-            alert("비밀번호 재설정 이메일을 발송했습니다.\n이메일을 확인해주세요.");
+            alert(
+                "비밀번호 재설정 이메일을 발송했습니다.\n이메일을 확인해주세요."
+            );
             window.location.href = "/";
         } else if (result.status === 201) {
             alert("일치하는 사용자가 존재하지 않습니다.");
@@ -72,7 +74,7 @@ function PwInquiry(props: propsType) {
     };
 
     return (
-        <div className="Login">
+        <div className="pwInquiry">
             {!props.isLogin ? (
                 <div>
                     <h1>비밀번호 찾기</h1>

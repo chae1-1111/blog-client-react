@@ -20,6 +20,7 @@ function ResetPw(props: propsType) {
         userpw_check: "",
     } as disable);
     const [user, setUser] = useState({ UserId: "", UserKey: 0 });
+    const [isLoaded, setIsLoaded] = useState(false);
 
     let current = decodeURI(window.location.href);
     let search = current.split("?")[1];
@@ -32,7 +33,17 @@ function ResetPw(props: propsType) {
                 headers: { Authorization: `${config.apikey}` },
             }
         );
-        setUser({ ...user.data.body });
+        if (user.status === 200) {
+            console.log("user", user.data);
+            setUser({ ...user.data.body });
+            setIsLoaded(true);
+        } else if (user.status === 201 && user.data.errorCode === "TKN001") {
+            console.log(user);
+            alert("만료된 링크입니다.");
+        } else {
+            alert("잘못된 링크입니다.");
+            window.location.href = "/";
+        }
     };
 
     useEffect(() => {
@@ -47,7 +58,7 @@ function ResetPw(props: propsType) {
 
     const [active, setActive] = useState(true);
 
-    const pwInquiry: Function = async () => {
+    const resetPw: Function = async () => {
         let resultCheck = { userpw: "", userpw_check: "" } as disable;
 
         const userpw = (document.getElementById("userpw") as HTMLInputElement)
@@ -76,52 +87,82 @@ function ResetPw(props: propsType) {
             setActive(true);
             return;
         }
+
+        try {
+            let result = await axios.put(
+                `${config.baseurl}/member/resetPw`,
+                {
+                    userkey: user.UserKey,
+                    userpw: userpw,
+                    token: params.get("token"),
+                },
+                { headers: { Authorization: `${config.apikey}` } }
+            );
+            if (result.status === 200) {
+                alert(
+                    "비밀번호가 변경되었습니다.\n로그인 페이지로 이동합니다."
+                );
+                window.location.href = "/login";
+            } else {
+                alert("잘못된 요청입니다.");
+                window.location.href = "/";
+            }
+        } catch (err) {
+            alert("잠시 후 다시 시도해주세요.");
+        }
     };
 
     return (
-        <div className="Login">
+        <div className="resetPw">
             {!props.isLogin ? (
-                <div>
-                    <h1>비밀번호 재설정</h1>
-                    <div className="form">
-                        <p id="userid">{user.UserId}</p>
-                        <input
-                            type="password"
-                            id="userpw"
-                            placeholder="비밀번호"
-                            className={disable.userpw === "" ? "" : "error"}
-                            onClick={() => {
-                                setDisable({ ...disable, userpw: "" });
-                            }}
-                        />
-                        {disable.userpw !== "" ? (
-                            <p className="disable">{disable.userpw}</p>
-                        ) : null}
-                        <input
-                            type="password"
-                            id="userpw_check"
-                            placeholder="비밀번호 확인"
-                            className={
-                                disable.userpw_check === "" ? "" : "error"
-                            }
-                            onClick={() => {
-                                setDisable({ ...disable, userpw_check: "" });
-                            }}
-                        />
-                        {disable.userpw_check !== "" ? (
-                            <p className="disable">{disable.userpw_check}</p>
-                        ) : null}
-                        <input
-                            type="button"
-                            value="비밀번호 찾기"
-                            onClick={() => {
-                                setActive(false);
-                                pwInquiry();
-                            }}
-                            disabled={!active}
-                        />
+                isLoaded ? (
+                    <div>
+                        <h1>비밀번호 재설정</h1>
+                        <div className="form">
+                            <p id="userid">{user.UserId}</p>
+                            <input
+                                type="password"
+                                id="userpw"
+                                placeholder="비밀번호"
+                                className={disable.userpw === "" ? "" : "error"}
+                                onClick={() => {
+                                    setDisable({ ...disable, userpw: "" });
+                                }}
+                            />
+                            {disable.userpw !== "" ? (
+                                <p className="disable">{disable.userpw}</p>
+                            ) : null}
+                            <input
+                                type="password"
+                                id="userpw_check"
+                                placeholder="비밀번호 확인"
+                                className={
+                                    disable.userpw_check === "" ? "" : "error"
+                                }
+                                onClick={() => {
+                                    setDisable({
+                                        ...disable,
+                                        userpw_check: "",
+                                    });
+                                }}
+                            />
+                            {disable.userpw_check !== "" ? (
+                                <p className="disable">
+                                    {disable.userpw_check}
+                                </p>
+                            ) : null}
+                            <input
+                                type="button"
+                                value="비밀번호 찾기"
+                                onClick={() => {
+                                    setActive(false);
+                                    resetPw();
+                                }}
+                                disabled={!active}
+                            />
+                        </div>
                     </div>
-                </div>
+                ) : null
             ) : (
                 <script>window.location.href = "./";</script>
             )}

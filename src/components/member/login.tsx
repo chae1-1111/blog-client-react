@@ -22,6 +22,7 @@ function Login(props: propsType) {
 
         if (result.data.status === 200) {
             sessionStorage.setItem("Name", result.data.body.Name);
+            sessionStorage.setItem("Email", result.data.body.Email);
             sessionStorage.setItem("UserKey", result.data.body.UserKey);
             props.setIsLogin(true);
             window.location.href = "./";

@@ -1,7 +1,14 @@
+a {
+    text-decoration: none;
+}
+.Header-wrap {
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+}
 .Header {
     width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
-    border-bottom: 1px solid #ccc;
     height: 10vh;
     display: flex;
     flex-direction: row;
@@ -39,8 +46,10 @@
     }
 
     .Header-right {
+        position: relative;
         display: flex;
         align-items: center;
+        padding-right: 2vw;
         .login-area {
             width: 10vw;
             height: 3vw;
@@ -50,9 +59,45 @@
             text-align: center;
             line-height: 3vw;
             text-decoration: unset;
-
             &:hover {
                 background-color: #444;
+            }
+        }
+        .profile-wrap {
+            position: absolute;
+            width: 9vw;
+            left: -6vw;
+            top: 5vw;
+            background-color: #eee;
+            border-radius: 1vw;
+            z-index: 1;
+
+            .profile-name {
+                font-size: 1rem;
+                font-weight: bold;
+                padding-left: 10%;
+            }
+
+            .profile-link {
+                font-size: 0.8rem;
+                padding-left: 10%;
+                color: #333;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            &::after {
+                content: "";
+                position: absolute;
+                background-image: url("../images/header/profile-edge.png");
+                top: -0.9vw;
+                right: 1.4vw;
+                width: 1.4vw;
+                height: 1vw;
+                background-size: contain;
+                background-position: bottom;
+                background-repeat: no-repeat;
             }
         }
     }

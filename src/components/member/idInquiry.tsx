@@ -49,7 +49,7 @@ function IdInquiry(props: propsType) {
     };
 
     return (
-        <div className="Login">
+        <div className="idInquiry">
             {!props.isLogin ? (
                 <div>
                     <h1>아이디 찾기</h1>
