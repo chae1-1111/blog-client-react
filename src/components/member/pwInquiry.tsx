@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import config from "../../config/config.json";
@@ -14,13 +14,19 @@ interface disable {
     userid?: String;
 }
 
-function PwInquiry(props: propsType) {
+const PwInquiry = (props: propsType) => {
     const [disable, setDisable] = useState({
         email: "",
         userid: "",
     } as disable);
 
     const [active, setActive] = useState(true);
+
+    useEffect(() => {
+        if (props.isLogin) {
+            window.location.href = "/";
+        }
+    }, []);
 
     const pwInquiry: Function = async () => {
         let resultCheck = { userid: "", email: "" } as disable;
@@ -75,7 +81,7 @@ function PwInquiry(props: propsType) {
 
     return (
         <div className="pwInquiry">
-            {!props.isLogin ? (
+            {!props.isLogin && (
                 <div>
                     <h1>비밀번호 찾기</h1>
                     <div className="form">
@@ -114,11 +120,9 @@ function PwInquiry(props: propsType) {
                         />
                     </div>
                 </div>
-            ) : (
-                <script>window.location.href = "./";</script>
             )}
         </div>
     );
-}
+};
 
 export default PwInquiry;

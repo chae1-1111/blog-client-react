@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import config from "../../config/config.json";
@@ -9,10 +9,16 @@ interface propsType {
     isLogin: boolean;
 }
 
-function IdInquiry(props: propsType) {
+const IdInquiry = (props: propsType) => {
     const [disable, setDisable] = useState("" as String);
 
     const [active, setActive] = useState(true);
+
+    useEffect(() => {
+        if (!props.isLogin) {
+            window.location.href = "/";
+        }
+    }, []);
 
     const idInquiry: Function = async () => {
         const email = (document.getElementById("email") as HTMLInputElement)
@@ -50,7 +56,7 @@ function IdInquiry(props: propsType) {
 
     return (
         <div className="idInquiry">
-            {!props.isLogin ? (
+            {!props.isLogin && (
                 <div>
                     <h1>아이디 찾기</h1>
                     <div className="form">
@@ -77,11 +83,9 @@ function IdInquiry(props: propsType) {
                         />
                     </div>
                 </div>
-            ) : (
-                <script>window.location.href = "./";</script>
             )}
         </div>
     );
-}
+};
 
 export default IdInquiry;

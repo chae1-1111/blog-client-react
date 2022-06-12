@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import config from "../../config/config.json";
 import SelectKeyword from "./selectKeyword";
@@ -19,7 +19,7 @@ interface disableType {
     email?: string;
 }
 
-function Join(props: propsType) {
+const Join = (props: propsType) => {
     const [selectKeyword, setSelectKeyword] = useState(false);
     const [emailAuth, setEmailAuth] = useState(false);
     const [email, setEmail] = useState("");
@@ -27,6 +27,12 @@ function Join(props: propsType) {
     const [keywords, setKeywords] = useState([] as string[]);
 
     const [disable, setDisable] = useState({} as disableType);
+
+    useEffect(() => {
+        if (props.isLogin) {
+            window.location.href = "/";
+        }
+    }, []);
 
     const join: Function = async () => {
         const userid = document.getElementById("userid") as HTMLInputElement;
@@ -76,7 +82,7 @@ function Join(props: propsType) {
 
     return (
         <div className="Join">
-            {!props.isLogin ? (
+            {!props.isLogin && (
                 <div>
                     <h1>회원가입</h1>
                     <div className="form">
@@ -169,8 +175,6 @@ function Join(props: propsType) {
                         />
                     </div>
                 </div>
-            ) : (
-                <script>window.location.href = "./";</script>
             )}
             {emailAuth ? (
                 <EmailAuth setEmailAuth={setEmailAuth} setEmail={setEmail} />
@@ -184,6 +188,6 @@ function Join(props: propsType) {
             ) : null}
         </div>
     );
-}
+};
 
 export default Join;

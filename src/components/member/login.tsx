@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useEffect } from "react";
 
 import config from "../../config/config.json";
 
@@ -9,7 +10,13 @@ interface propsType {
     setIsLogin: (isLogin: boolean) => void;
 }
 
-function Login(props: propsType) {
+const Login = (props: propsType) => {
+    useEffect(() => {
+        if (props.isLogin) {
+            window.location.href = "/";
+        }
+    }, []);
+
     const login: Function = async () => {
         let userid = (document.querySelector("#userid") as HTMLInputElement)
             .value;
@@ -38,7 +45,7 @@ function Login(props: propsType) {
 
     return (
         <div className="Login">
-            {!props.isLogin ? (
+            {!props.isLogin && (
                 <div>
                     <h1>로그인</h1>
                     <div className="form">
@@ -66,11 +73,9 @@ function Login(props: propsType) {
                         </ul>
                     </div>
                 </div>
-            ) : (
-                <script>window.location.href = "./";</script>
             )}
         </div>
     );
-}
+};
 
 export default Login;

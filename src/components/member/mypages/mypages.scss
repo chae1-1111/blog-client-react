@@ -1,0 +1,41 @@
+.sub-content-wrap {
+    margin: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+
+    .sub-content {
+        padding: 10vh 0;
+
+        .form {
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            width: 35%;
+
+            input {
+                line-height: 1.5rem;
+                height: 5vh;
+                margin-top: 1.5vh;
+                font-size: 1.1rem;
+                border: 2px solid #000;
+                border-radius: 1vh;
+
+                &.error {
+                    border-color: red;
+                    font-size: 1.1rem;
+                }
+            }
+
+            p.disable {
+                color: red;
+                font-size: 0.8rem;
+                margin: unset;
+                text-align: left;
+            }
+        }
+    }
+}

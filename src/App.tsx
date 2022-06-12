@@ -10,11 +10,9 @@ import ResetPw from "./components/member/resetPw";
 import Mypage from "./components/member/mypage";
 
 function App() {
-    const [isLogin, setIsLogin] = React.useState(false);
-
-    useEffect(() => {
-        setIsLogin(sessionStorage.getItem("UserKey") ? true : false);
-    }, []);
+    const [isLogin, setIsLogin] = React.useState(
+        sessionStorage.getItem("UserKey") ? true : false
+    );
 
     return (
         <BrowserRouter>
@@ -45,12 +43,17 @@ function App() {
                                 element={<PwInquiry isLogin={isLogin} />}
                             />
                             <Route
-                                path="/resetPw"
+                                path="/resetPw/:token"
                                 element={<ResetPw isLogin={isLogin} />}
                             />
                             <Route
-                                path="/mypage/*"
-                                element={<Mypage isLogin={isLogin} />}
+                                path="/mypage/:page"
+                                element={
+                                    <Mypage
+                                        isLogin={isLogin}
+                                        setIsLogin={setIsLogin}
+                                    />
+                                }
                             />
                         </Routes>
                     </div>

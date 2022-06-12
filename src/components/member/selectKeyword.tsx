@@ -11,7 +11,7 @@ interface selectKeywordProps {
     setSelectKeyword: (selectKeyword: boolean) => void;
 }
 
-const EmailAuth = (props: selectKeywordProps) => {
+const SelectKeyword = (props: selectKeywordProps) => {
     const [selected, setSelected] = useState(props.keywords);
 
     return (
@@ -70,4 +70,4 @@ const EmailAuth = (props: selectKeywordProps) => {
     );
 };
 
-export default EmailAuth;
+export default SelectKeyword;

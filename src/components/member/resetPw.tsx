@@ -4,6 +4,7 @@ import axios from "axios";
 import config from "../../config/config.json";
 
 import "./resetPw.scss";
+import { useParams } from "react-router-dom";
 
 interface propsType {
     isLogin: boolean;
@@ -14,7 +15,7 @@ interface disable {
     userpw_check?: String;
 }
 
-function ResetPw(props: propsType) {
+const ResetPw = (props: propsType) => {
     const [disable, setDisable] = useState({
         userpw: "",
         userpw_check: "",
@@ -22,13 +23,11 @@ function ResetPw(props: propsType) {
     const [user, setUser] = useState({ UserId: "", UserKey: 0 });
     const [isLoaded, setIsLoaded] = useState(false);
 
-    let current = decodeURI(window.location.href);
-    let search = current.split("?")[1];
-    let params = new URLSearchParams(search);
+    let params = useParams();
 
     const getUser = async function () {
         let user = await axios.get(
-            `${config.baseurl}/member/tokenCheck?token=${params.get("token")}`,
+            `${config.baseurl}/member/tokenCheck?token=${params.token}`,
             {
                 headers: { Authorization: `${config.apikey}` },
             }
@@ -94,7 +93,7 @@ function ResetPw(props: propsType) {
                 {
                     userkey: user.UserKey,
                     userpw: userpw,
-                    token: params.get("token"),
+                    token: params.token,
                 },
                 { headers: { Authorization: `${config.apikey}` } }
             );
@@ -168,6 +167,6 @@ function ResetPw(props: propsType) {
             )}
         </div>
     );
-}
+};
 
 export default ResetPw;

@@ -89,7 +89,7 @@ const Header = (props: HeaderProps) => {
                         </div>
                     ) : (
                         // 로그인 전
-                        <a className="login-area" href="./login">
+                        <a className="login-area" href="/login">
                             시작하기
                         </a>
                     )}
