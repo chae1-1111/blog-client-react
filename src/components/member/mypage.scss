@@ -4,7 +4,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    padding-top: 5vh;
+    padding-top: 50px;
 
     .nav-left {
         width: 25%;
@@ -22,7 +22,7 @@
 
         .nav-left-profile {
             width: 80%;
-            margin: 5vh auto 0;
+            margin: 50px auto 0;
             border: 1px solid #ccc;
             background-color: #fff;
             padding: 1%;
@@ -43,7 +43,7 @@
         .nav-left-list {
             position: relative;
             width: 80%;
-            margin: 5vh auto 0;
+            margin: 50px auto 0;
             border: 1px solid #ccc;
             background-color: #fff;
             > div {

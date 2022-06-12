@@ -1,0 +1,14 @@
+.form-wrap {
+    width: 50%;
+    margin: 0 auto;
+    padding-top: 10vh;
+    text-align: center;
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: 0 25%;
+        justify-items: center;
+        justify-content: space-around;
+    }
+}

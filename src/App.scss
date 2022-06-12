@@ -8,6 +8,30 @@ body {
     margin: unset;
 }
 
+a {
+    text-decoration: none;
+}
+
+input {
+    height: 3rem;
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    border: 2px solid #000;
+    border-radius: 1rem;
+
+    &.error {
+        border-color: red;
+        font-size: 1.1rem;
+    }
+}
+
+p.disable {
+    color: red;
+    font-size: 0.8rem;
+    margin: unset;
+    text-align: left;
+}
+
 .content-wrap {
     width: 100%;
     margin: 0 auto;

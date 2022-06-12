@@ -3,7 +3,7 @@ import axios from "axios";
 
 import config from "../../config/config.json";
 
-import "./resetPw.scss";
+import "./member.scss";
 import { useParams } from "react-router-dom";
 
 interface propsType {
@@ -112,7 +112,7 @@ const ResetPw = (props: propsType) => {
     };
 
     return (
-        <div className="resetPw">
+        <div className="form-wrap">
             {!props.isLogin ? (
                 isLoaded ? (
                     <div>

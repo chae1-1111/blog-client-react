@@ -3,7 +3,7 @@ import axios from "axios";
 
 import config from "../../config/config.json";
 
-import "./idInquiry.scss";
+import "./member.scss";
 
 interface propsType {
     isLogin: boolean;
@@ -15,7 +15,7 @@ const IdInquiry = (props: propsType) => {
     const [active, setActive] = useState(true);
 
     useEffect(() => {
-        if (!props.isLogin) {
+        if (props.isLogin) {
             window.location.href = "/";
         }
     }, []);
@@ -55,7 +55,7 @@ const IdInquiry = (props: propsType) => {
     };
 
     return (
-        <div className="idInquiry">
+        <div className="form-wrap">
             {!props.isLogin && (
                 <div>
                     <h1>아이디 찾기</h1>

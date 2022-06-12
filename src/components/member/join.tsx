@@ -6,7 +6,7 @@ import SelectKeyword from "./selectKeyword";
 import EmailAuth from "./emailAuth";
 import { joinCheck } from "./joinCheck";
 
-import "./join.scss";
+import "./member.scss";
 
 interface propsType {
     isLogin: boolean;
@@ -81,7 +81,7 @@ const Join = (props: propsType) => {
     };
 
     return (
-        <div className="Join">
+        <div className="form-wrap">
             {!props.isLogin && (
                 <div>
                     <h1>회원가입</h1>
@@ -177,12 +177,17 @@ const Join = (props: propsType) => {
                 </div>
             )}
             {emailAuth ? (
-                <EmailAuth setEmailAuth={setEmailAuth} setEmail={setEmail} />
+                <EmailAuth
+                    emailAuth={emailAuth}
+                    setEmailAuth={setEmailAuth}
+                    setEmail={setEmail}
+                />
             ) : null}
             {selectKeyword ? (
                 <SelectKeyword
                     keywords={keywords}
                     setKeywords={setKeywords}
+                    selectKeyword={selectKeyword}
                     setSelectKeyword={setSelectKeyword}
                 />
             ) : null}

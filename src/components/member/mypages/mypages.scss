@@ -7,7 +7,7 @@
     border: 1px solid #ccc;
 
     .sub-content {
-        padding: 10vh 0;
+        padding: 100px 0;
 
         .form {
             margin: 0 auto;
@@ -15,27 +15,6 @@
             flex-direction: column;
             align-items: stretch;
             width: 35%;
-
-            input {
-                line-height: 1.5rem;
-                height: 5vh;
-                margin-top: 1.5vh;
-                font-size: 1.1rem;
-                border: 2px solid #000;
-                border-radius: 1vh;
-
-                &.error {
-                    border-color: red;
-                    font-size: 1.1rem;
-                }
-            }
-
-            p.disable {
-                color: red;
-                font-size: 0.8rem;
-                margin: unset;
-                text-align: left;
-            }
         }
     }
 }

@@ -1,13 +1,14 @@
 import axios from "axios";
 import "./emailAuth.scss";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import config from "../../config/config.json";
 
 import { FaTimes } from "react-icons/fa";
 
 interface emailAuthProps {
+    emailAuth: boolean;
     setEmailAuth: (emailAuth: boolean) => void;
     setEmail: (email: string) => void;
 }
@@ -18,6 +19,26 @@ const EmailAuth = (props: emailAuthProps) => {
     const [buttonState, setButtonState] = useState(false);
 
     const regEmail = /^\w+([\.-]?\w+)*@\w+([\.0]?\w+)*(\.\w{2,3})+$/;
+
+    const popupRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+
+    useEffect(() => {
+        const checkIfClickedOutside = (e: any) => {
+            if (
+                props.emailAuth &&
+                popupRef.current &&
+                !popupRef.current.contains(e.target)
+            ) {
+                props.setEmailAuth(false);
+            }
+        };
+
+        document.addEventListener("mouseup", checkIfClickedOutside);
+
+        return () => {
+            document.removeEventListener("mouseup", checkIfClickedOutside);
+        };
+    }, [props.emailAuth]);
 
     const sendEmail: Function = async () => {
         setButtonState(true);
@@ -79,7 +100,7 @@ const EmailAuth = (props: emailAuthProps) => {
 
     return (
         <div className="wrap">
-            <div className="EmailAuth">
+            <div ref={popupRef} className="EmailAuth">
                 <h1>이메일 인증</h1>
                 <div className="input-wrap">
                     <input type="text" id="_email" placeholder="이메일" />

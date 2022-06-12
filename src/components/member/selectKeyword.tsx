@@ -3,20 +3,41 @@ import "./selectKeyword.scss";
 import { FaTimes } from "react-icons/fa";
 
 import keywords from "./keywords.json";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface selectKeywordProps {
     keywords: string[];
     setKeywords: (keywords: string[]) => void;
+    selectKeyword: boolean;
     setSelectKeyword: (selectKeyword: boolean) => void;
 }
 
 const SelectKeyword = (props: selectKeywordProps) => {
     const [selected, setSelected] = useState(props.keywords);
 
+    const popupRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+
+    useEffect(() => {
+        const checkIfClickedOutside = (e: any) => {
+            if (
+                props.selectKeyword &&
+                popupRef.current &&
+                !popupRef.current.contains(e.target)
+            ) {
+                props.setSelectKeyword(false);
+            }
+        };
+
+        document.addEventListener("mouseup", checkIfClickedOutside);
+
+        return () => {
+            document.removeEventListener("mouseup", checkIfClickedOutside);
+        };
+    }, [props.selectKeyword]);
+
     return (
         <div className="wrap">
-            <div className="SelectKeyword">
+            <div ref={popupRef} className="SelectKeyword">
                 <div>
                     <h2>관심 키워드 설정</h2>
                     <div className="keywords">

@@ -3,7 +3,7 @@ import axios from "axios";
 
 import config from "../../config/config.json";
 
-import "./pwInquiry.scss";
+import "./member.scss";
 
 interface propsType {
     isLogin: boolean;
@@ -80,7 +80,7 @@ const PwInquiry = (props: propsType) => {
     };
 
     return (
-        <div className="pwInquiry">
+        <div className="form-wrap">
             {!props.isLogin && (
                 <div>
                     <h1>비밀번호 찾기</h1>

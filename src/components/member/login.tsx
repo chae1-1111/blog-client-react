@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import config from "../../config/config.json";
 
 import "./login.scss";
+import "./member.scss";
 
 interface propsType {
     isLogin: boolean;
@@ -44,7 +45,7 @@ const Login = (props: propsType) => {
     };
 
     return (
-        <div className="Login">
+        <div className="form-wrap">
             {!props.isLogin && (
                 <div>
                     <h1>로그인</h1>
@@ -60,7 +61,7 @@ const Login = (props: propsType) => {
                             onClick={() => login()}
                             value="로그인"
                         />
-                        <ul>
+                        <ul className="actions">
                             <li>
                                 <a href="/idInquiry">아이디 찾기</a>
                             </li>
