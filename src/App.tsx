@@ -22,12 +22,6 @@ function App() {
                     <div className="content">
                         <Routes>
                             <Route
-                                path="/health"
-                                element={
-                                    <h3>Hey There!!! The App is Healthy</h3>
-                                }
-                            />
-                            <Route
                                 path="/login"
                                 element={
                                     <Login
