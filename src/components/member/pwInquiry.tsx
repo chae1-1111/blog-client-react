@@ -85,7 +85,7 @@ const PwInquiry = (props: propsType) => {
                 <div>
                     <h1>비밀번호 재설정</h1>
                     <div className="form">
-                        <p className="label">아이디</p>
+                        <p className="label mandatory">아이디</p>
                         <input
                             type="text"
                             id="userid"
@@ -98,7 +98,7 @@ const PwInquiry = (props: propsType) => {
                         {disable.userid !== "" ? (
                             <p className="disable">{disable.userid}</p>
                         ) : null}
-                        <p className="label">이메일</p>
+                        <p className="label mandatory">이메일</p>
                         <input
                             type="text"
                             id="email"

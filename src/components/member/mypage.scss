@@ -4,7 +4,6 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    padding-top: 50px;
 
     .nav-left {
         width: 25%;
@@ -92,12 +91,10 @@
     .mypage-content-wrap {
         position: relative;
         width: 75%;
-        height: 100px;
 
         .mypage-content {
             width: 90%;
             margin: 0 auto;
-            height: 100px;
         }
     }
 }

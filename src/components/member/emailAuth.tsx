@@ -103,7 +103,7 @@ const EmailAuth = (props: emailAuthProps) => {
             <div ref={popupRef} className="EmailAuth">
                 <h1>이메일 인증</h1>
                 <div className="input-wrap">
-                    <p className="label">이메일</p>
+                    <p className="label mandatory">이메일</p>
                     <input type="text" id="_email" placeholder="이메일" />
                     <input
                         type="button"
@@ -112,7 +112,12 @@ const EmailAuth = (props: emailAuthProps) => {
                         id="button"
                         value="인증번호 발송"
                     />
-                    <input type="hidden" id="code" placeholder="인증번호" />
+                    <input
+                        type="hidden"
+                        id="code"
+                        className="mandatory"
+                        placeholder="인증번호"
+                    />
                     <input
                         type="hidden"
                         id="verify"

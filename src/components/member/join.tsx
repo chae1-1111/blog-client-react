@@ -87,7 +87,7 @@ const Join = (props: propsType) => {
                 <div>
                     <h1>회원가입</h1>
                     <div className="form">
-                        <p className="label">아이디</p>
+                        <p className="label mandatory">아이디</p>
                         <input
                             type="text"
                             className={
@@ -104,7 +104,7 @@ const Join = (props: propsType) => {
                         {disable.userid && disable.userid !== "" ? (
                             <p className="disable">{disable.userid}</p>
                         ) : null}
-                        <p className="label">비밀번호</p>
+                        <p className="label mandatory">비밀번호</p>
                         <input
                             type="password"
                             className={
@@ -121,7 +121,7 @@ const Join = (props: propsType) => {
                         {disable.userpw && disable.userpw !== "" ? (
                             <p className="disable">{disable.userpw}</p>
                         ) : null}
-                        <p className="label">비밀번호 확인</p>
+                        <p className="label mandatory">비밀번호 확인</p>
                         <input
                             type="password"
                             className={
@@ -139,7 +139,7 @@ const Join = (props: propsType) => {
                         {disable.userpw_check && disable.userpw_check !== "" ? (
                             <p className="disable">{disable.userpw_check}</p>
                         ) : null}
-                        <p className="label">이메일</p>
+                        <p className="label mandatory">이메일</p>
                         <input
                             type="text"
                             className={
@@ -168,7 +168,7 @@ const Join = (props: propsType) => {
                             id="birth"
                             max={new Date().toLocaleDateString("en-ca")}
                         />
-                        <p className="label">관심 키워드</p>
+                        <p className="label mandatory">관심 키워드</p>
                         <input
                             type="text"
                             id="keyword"
@@ -196,21 +196,21 @@ const Join = (props: propsType) => {
                     </div>
                 </div>
             )}
-            {emailAuth ? (
+            {emailAuth && (
                 <EmailAuth
                     emailAuth={emailAuth}
                     setEmailAuth={setEmailAuth}
                     setEmail={setEmail}
                 />
-            ) : null}
-            {selectKeyword ? (
+            )}
+            {selectKeyword && (
                 <SelectKeyword
                     keywords={keywords}
                     setKeywords={setKeywords}
                     selectKeyword={selectKeyword}
                     setSelectKeyword={setSelectKeyword}
                 />
-            ) : null}
+            )}
         </div>
     );
 };

@@ -103,30 +103,33 @@ const ModifyPassword = (props: propsType) => {
             <div className="sub-content-wrap">
                 <div className="sub-content">
                     <div className="form">
+                        <p className="label mandatory">기존 비밀번호</p>
                         <input
                             type="password"
                             id="userpw"
                             placeholder="기존 비밀번호"
                             className={disable.userpw === "" ? "" : "error"}
-                            onClick={() => {
+                            onFocus={() => {
                                 setDisable({ ...disable, userpw: "" });
                             }}
                         />
                         {disable.userpw !== "" ? (
                             <p className="disable">{disable.userpw}</p>
                         ) : null}
+                        <p className="label mandatory">신규 비밀번호</p>
                         <input
                             type="password"
                             id="newPw"
-                            placeholder="변경할 비밀번호"
+                            placeholder="8~20자 영문 대소문자, 숫자, 특수문자"
                             className={disable.newPw === "" ? "" : "error"}
-                            onClick={() => {
+                            onFocus={() => {
                                 setDisable({ ...disable, newPw: "" });
                             }}
                         />
                         {disable.newPw !== "" ? (
                             <p className="disable">{disable.newPw}</p>
                         ) : null}
+                        <p className="label mandatory">비밀번호 확인</p>
                         <input
                             type="password"
                             id="newPw_check"
@@ -134,7 +137,7 @@ const ModifyPassword = (props: propsType) => {
                             className={
                                 disable.newPw_check === "" ? "" : "error"
                             }
-                            onClick={() => {
+                            onFocus={() => {
                                 setDisable({
                                     ...disable,
                                     newPw_check: "",

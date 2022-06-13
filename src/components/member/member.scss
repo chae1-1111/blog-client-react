@@ -32,6 +32,12 @@ p.label {
     text-align: left;
     margin: unset;
     margin-top: 1rem;
+
+    &.mandatory::after {
+        content: " *";
+        font-size: 1rem;
+        color: red;
+    }
 }
 
 @include mobile {

@@ -77,7 +77,7 @@ const Mypage = (props: MyPageProps) => {
                                 <ModifyPassword setIsLogin={props.setIsLogin} />
                             )}
                             {params.page === "removeAccount" && (
-                                <RemoveAccount />
+                                <RemoveAccount setIsLogin={props.setIsLogin} />
                             )}
                         </div>
                     </div>
