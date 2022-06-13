@@ -167,7 +167,6 @@ const Join = (props: propsType) => {
                             type="date"
                             id="birth"
                             max={new Date().toLocaleDateString("en-ca")}
-                            placeholder="생년월일"
                         />
                         <p className="label">관심 키워드</p>
                         <input
