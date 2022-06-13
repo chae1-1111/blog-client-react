@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EmailAuth from "../emailAuth";
 import SelectKeyword from "../selectKeyword";
 
@@ -15,9 +15,34 @@ const ModifyUser = () => {
     const [disable, setDisable] = useState({ userpw: "" } as disable);
     const [active, setActive] = useState(true);
     const [keywords, setKeywords] = useState([] as string[]);
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(
+        sessionStorage.getItem("Email") as string
+    );
     const [emailAuth, setEmailAuth] = useState(false);
     const [selectKeyword, setSelectKeyword] = useState(false);
+
+    const name = useRef() as React.MutableRefObject<HTMLInputElement>;
+    const birth = useRef() as React.MutableRefObject<HTMLInputElement>;
+
+    const getUser = async () => {
+        let result = await axios.get(
+            `${
+                config.baseurl
+            }/member/general/getUserInfo?userkey=${sessionStorage.getItem(
+                "UserKey"
+            )}`,
+            { headers: { Authorization: config.apikey } }
+        );
+        if (result.status === 200) {
+            setKeywords(result.data.body.Keyword);
+            name.current.value = result.data.body.Name;
+            birth.current.value = result.data.body.Birth;
+        }
+    };
+
+    useEffect(() => {
+        getUser();
+    }, []);
 
     const removeUndefined: Function = (obj: object) => {
         Object.keys(obj).forEach(
@@ -61,16 +86,18 @@ const ModifyUser = () => {
             return;
         }
 
+        let data = removeUndefined({
+            userkey: sessionStorage.getItem("UserKey"),
+            userpw: userpw,
+            email: email,
+            name: name,
+            birth: birth,
+            keyword: keywords,
+        });
+
         const result = await axios.put(
             `${config.baseurl}/member/general`,
-            removeUndefined({
-                userkey: sessionStorage.getItem("UserKey"),
-                userpw: userpw,
-                email: email,
-                name: name,
-                birth: birth,
-                keywords: keywords,
-            }),
+            data,
             {
                 headers: { Authorization: config.apikey },
             }
@@ -133,13 +160,19 @@ const ModifyUser = () => {
                             <p className="disable">{disable.email}</p>
                         ) : null}
                         <p className="label">이름</p>
-                        <input type="text" id="name" placeholder="이름" />
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="이름"
+                            ref={name}
+                        />
 
                         <p className="label">생년월일</p>
                         <input
                             type="date"
                             id="birth"
                             max={new Date().toLocaleDateString("en-ca")}
+                            ref={birth}
                         />
                         <p className="label mandatory">관심 키워드</p>
                         <input
