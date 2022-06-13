@@ -19,7 +19,7 @@ interface result {
 export const joinCheck: Function = async (user: user) => {
     let result: result = {};
 
-    let regId = /^[a-zA-Z0-9]{4,12}$/;
+    let regId = /^[a-zA-Z0-9]{6,20}$/;
     let regPw = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[~!@#$%^&*<>?]).{8,20}$/;
 
     let idCheck = await axios.get(

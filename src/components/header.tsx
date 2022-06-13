@@ -78,12 +78,14 @@ const Header = (props: HeaderProps) => {
                                             마이페이지
                                         </p>
                                     </a>
-                                    <p
-                                        className="profile-link"
-                                        onClick={() => logout()}
-                                    >
-                                        로그아웃
-                                    </p>
+                                    <a href="/">
+                                        <p
+                                            className="profile-link"
+                                            onClick={() => logout()}
+                                        >
+                                            로그아웃
+                                        </p>
+                                    </a>
                                 </div>
                             )}
                         </div>

@@ -17,6 +17,7 @@ interface disableType {
     userpw?: string;
     userpw_check?: string;
     email?: string;
+    keywords?: string;
 }
 
 const Join = (props: propsType) => {
@@ -86,6 +87,7 @@ const Join = (props: propsType) => {
                 <div>
                     <h1>회원가입</h1>
                     <div className="form">
+                        <p className="label">아이디</p>
                         <input
                             type="text"
                             className={
@@ -94,14 +96,15 @@ const Join = (props: propsType) => {
                                     : "error"
                             }
                             id="userid"
-                            placeholder="아이디"
-                            onClick={() => {
+                            placeholder="6~20자 영문 대소문자, 숫자"
+                            onFocus={() => {
                                 setDisable({ ...disable, userid: "" });
                             }}
                         />
                         {disable.userid && disable.userid !== "" ? (
                             <p className="disable">{disable.userid}</p>
                         ) : null}
+                        <p className="label">비밀번호</p>
                         <input
                             type="password"
                             className={
@@ -110,14 +113,15 @@ const Join = (props: propsType) => {
                                     : "error"
                             }
                             id="userpw"
-                            placeholder="비밀번호"
-                            onClick={() => {
+                            placeholder="8~20자 영문 대소문자, 숫자, 특수문자"
+                            onFocus={() => {
                                 setDisable({ ...disable, userpw: "" });
                             }}
                         />
                         {disable.userpw && disable.userpw !== "" ? (
                             <p className="disable">{disable.userpw}</p>
                         ) : null}
+                        <p className="label">비밀번호 확인</p>
                         <input
                             type="password"
                             className={
@@ -128,20 +132,25 @@ const Join = (props: propsType) => {
                             }
                             id="userpw_check"
                             placeholder="비밀번호 확인"
-                            onClick={() => {
+                            onFocus={() => {
                                 setDisable({ ...disable, userpw_check: "" });
                             }}
                         />
                         {disable.userpw_check && disable.userpw_check !== "" ? (
                             <p className="disable">{disable.userpw_check}</p>
                         ) : null}
+                        <p className="label">이메일</p>
                         <input
                             type="text"
-                            className={disable.email ? "error" : ""}
+                            className={
+                                !disable.email || disable.email === ""
+                                    ? ""
+                                    : "error"
+                            }
                             id="email"
                             placeholder="이메일"
                             value={email}
-                            onClick={() => {
+                            onFocus={() => {
                                 setDisable({ ...disable, email: "" });
                                 setEmailAuth(true);
                             }}
@@ -150,24 +159,36 @@ const Join = (props: propsType) => {
                         {disable.email && disable.email !== "" ? (
                             <p className="disable">{disable.email}</p>
                         ) : null}
+                        <p className="label">이름</p>
                         <input type="text" id="name" placeholder="이름" />
 
+                        <p className="label">생년월일</p>
                         <input
                             type="date"
                             id="birth"
                             max={new Date().toLocaleDateString("en-ca")}
                             placeholder="생년월일"
                         />
+                        <p className="label">관심 키워드</p>
                         <input
                             type="text"
                             id="keyword"
                             placeholder="관심 키워드 설정"
+                            className={
+                                !disable.keywords || disable.keywords === ""
+                                    ? ""
+                                    : "error"
+                            }
                             onClick={() => {
+                                setDisable({ ...disable, keywords: "" });
                                 setSelectKeyword(true);
                             }}
                             value={keywords.join(", ")}
                             readOnly
                         />
+                        {disable.keywords && disable.keywords !== "" ? (
+                            <p className="disable">{disable.keywords}</p>
+                        ) : null}
                         <input
                             type="button"
                             onClick={() => join()}

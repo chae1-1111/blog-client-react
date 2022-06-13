@@ -1,14 +1,58 @@
+@mixin mobile {
+    @media (max-width: 767px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 768px) and (max-width: 1023px) {
+        @content;
+    }
+}
+
 .form-wrap {
     width: 50%;
     margin: 0 auto;
-    padding-top: 10vh;
+    padding: 10vh 0;
     text-align: center;
 
     .form {
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
         padding: 0 25%;
         justify-items: center;
         justify-content: space-around;
+        max-width: 300px;
+    }
+}
+
+p.label {
+    font-size: 0.9rem;
+    text-align: left;
+    margin: unset;
+    margin-top: 1rem;
+}
+
+@include mobile {
+    /*브라우저 사이즈767px이하일때*/
+
+    .form-wrap {
+        width: 100%;
+
+        .form {
+            padding: 0 10%;
+        }
+    }
+}
+
+@include tablet {
+    /*브라우저 사이즈768px이상, 1023px 이하일때*/
+
+    .form-wrap {
+        width: 100%;
+
+        .form {
+        }
     }
 }

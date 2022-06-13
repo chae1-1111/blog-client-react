@@ -60,6 +60,7 @@ const IdInquiry = (props: propsType) => {
                 <div>
                     <h1>아이디 찾기</h1>
                     <div className="form">
+                        <p className="label">이메일</p>
                         <input
                             type="text"
                             id="email"

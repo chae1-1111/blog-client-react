@@ -83,8 +83,9 @@ const PwInquiry = (props: propsType) => {
         <div className="form-wrap">
             {!props.isLogin && (
                 <div>
-                    <h1>비밀번호 찾기</h1>
+                    <h1>비밀번호 재설정</h1>
                     <div className="form">
+                        <p className="label">아이디</p>
                         <input
                             type="text"
                             id="userid"
@@ -97,6 +98,7 @@ const PwInquiry = (props: propsType) => {
                         {disable.userid !== "" ? (
                             <p className="disable">{disable.userid}</p>
                         ) : null}
+                        <p className="label">이메일</p>
                         <input
                             type="text"
                             id="email"
@@ -111,7 +113,7 @@ const PwInquiry = (props: propsType) => {
                         ) : null}
                         <input
                             type="button"
-                            value="비밀번호 찾기"
+                            value="비밀번호 재설정"
                             onClick={() => {
                                 setActive(false);
                                 pwInquiry();
