@@ -46,7 +46,7 @@ const Header = (props: HeaderProps) => {
                         </div>
                     </a>
                     <nav>
-                        <a>
+                        <a href={`/blog/${sessionStorage.getItem("UserId")}`}>
                             <p>내 블로그</p>
                         </a>
                         <a>

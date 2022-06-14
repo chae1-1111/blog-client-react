@@ -32,6 +32,7 @@ const Login = (props: propsType) => {
             sessionStorage.setItem("Name", result.data.body.Name);
             sessionStorage.setItem("Email", result.data.body.Email);
             sessionStorage.setItem("UserKey", result.data.body.UserKey);
+            sessionStorage.setItem("UserId", userid);
             props.setIsLogin(true);
             window.location.href = "./";
         } else {

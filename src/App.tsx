@@ -9,6 +9,8 @@ import PwInquiry from "./components/member/pwInquiry";
 import ResetPw from "./components/member/resetPw";
 import Mypage from "./components/member/mypage";
 
+import Blog from "./components/blog/blog";
+
 function App() {
     const [isLogin, setIsLogin] = React.useState(
         sessionStorage.getItem("UserKey") ? true : false
@@ -55,6 +57,7 @@ function App() {
                                     />
                                 }
                             />
+                            <Route path="/blog/:userid" element={<Blog />} />
                         </Routes>
                     </div>
                 </div>

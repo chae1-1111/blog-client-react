@@ -105,7 +105,7 @@ const ModifyUser = () => {
 
         if (result.status === 200) {
             alert("회원정보가 수정되었습니다.");
-            window.location.href = "/mypages/modifyUser";
+            window.location.href = "/mypage/modifyUser";
         } else if (result.status === 201) {
             setDisable({ ...disable, userpw: "비밀번호가 일치하지 않습니다." });
             setActive(true);
