@@ -18,7 +18,9 @@ const Post: Function = (props: post) => {
         <div className="post">
             <div className="post-title">{props.Title}</div>
             <div className="post-info">
-                <div className="post-created">{props.Created}</div>
+                <div className="post-created">
+                    {props.Created.split("T")[0]}
+                </div>
                 <div className="post-comments">{props.Replys.toString()}</div>
                 <div className="post-likes">{props.Likes.toString()}</div>
             </div>
