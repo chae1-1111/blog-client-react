@@ -65,3 +65,17 @@
         }
     }
 }
+
+@mixin tab {
+    @media (max-width: 950px) {
+        @content;
+    }
+}
+
+@include tab {
+    div.wrap {
+        div.SelectKeyword {
+            height: max-content;
+        }
+    }
+}
