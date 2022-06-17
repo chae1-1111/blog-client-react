@@ -1,5 +1,6 @@
-import { useEffect } from "react";
-import { FaHome, FaUser } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaHome, FaUser, FaEdit } from "react-icons/fa";
+import { AiOutlineUser } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 
 import "./mypage.scss";
@@ -7,6 +8,7 @@ import ConfigBlog from "./mypages/configBlog";
 import ModifyPassword from "./mypages/modifyPassword";
 import ModifyUser from "./mypages/modifyUser";
 import RemoveAccount from "./mypages/removeAccount";
+import EditProfile from "./mypages/editProfile";
 
 interface MyPageProps {
     isLogin: Boolean;
@@ -14,6 +16,8 @@ interface MyPageProps {
 }
 
 const Mypage = (props: MyPageProps) => {
+    const [viewPopup, setViewPopup] = useState(false);
+
     const params = useParams();
 
     useEffect(() => {
@@ -31,6 +35,16 @@ const Mypage = (props: MyPageProps) => {
                             <h2>마이페이지</h2>
                         </div>
                         <div className="nav-left-profile">
+                            <div className="profile-image">
+                                <AiOutlineUser size={100} />
+                                <p
+                                    onClick={() => {
+                                        setViewPopup(true);
+                                    }}
+                                >
+                                    <a href="#none">편집</a>
+                                </p>
+                            </div>
                             <p className="name">
                                 {sessionStorage.getItem("Name")}
                             </p>
@@ -82,6 +96,12 @@ const Mypage = (props: MyPageProps) => {
                         </div>
                     </div>
                 </>
+            )}
+            {viewPopup && (
+                <EditProfile
+                    viewPopup={viewPopup}
+                    setViewPopup={setViewPopup}
+                />
             )}
         </div>
     );

@@ -1,10 +1,4 @@
-.Mypage {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-
+div.blog-wrap {
     .nav-left {
         width: 25%;
         display: flex;
@@ -15,7 +9,7 @@
             text-align: center;
 
             h2 {
-                margin: unset;
+                margin-block-end: unset;
             }
         }
 
@@ -24,38 +18,9 @@
             margin: 50px auto 0;
             border: 1px solid #ccc;
             background-color: #fff;
-            padding: 10% 1% 5%;
+            padding: 1%;
             box-sizing: border-box;
             text-align: center;
-
-            .profile-image {
-                width: 100px;
-                height: 100px;
-                border-radius: 50%;
-                border: 1px solid #aaa;
-                margin: 0 auto;
-                position: relative;
-                overflow: hidden;
-
-                p {
-                    width: 100%;
-                    position: absolute;
-                    bottom: 0;
-                    margin: unset;
-                    padding: 3px 0;
-                    background-color: rgba($color: #777, $alpha: 0.7);
-                    font-size: 0.9rem;
-
-                    a {
-                        color: #fff;
-                    }
-
-                    &:hover {
-                        background-color: rgba($color: #777, $alpha: 0.9);
-                    }
-                }
-            }
-
             .name {
                 font-size: 1.2rem;
                 font-weight: bold;
@@ -114,16 +79,6 @@
                     border-bottom: unset;
                 }
             }
-        }
-    }
-
-    .mypage-content-wrap {
-        position: relative;
-        width: 75%;
-
-        .mypage-content {
-            width: 90%;
-            margin: 0 auto;
         }
     }
 }

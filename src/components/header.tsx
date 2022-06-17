@@ -71,7 +71,7 @@ const Header = (props: HeaderProps) => {
                         <div>
                             <FaUser
                                 className="user-icon"
-                                size={30}
+                                size={50}
                                 onClick={() => {
                                     setViewProfile(true);
                                 }}

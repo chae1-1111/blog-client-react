@@ -10,6 +10,7 @@ import ResetPw from "./components/member/resetPw";
 import Mypage from "./components/member/mypage";
 
 import Blog from "./components/blog/blog";
+import Test from "./components/test";
 
 function App() {
     const [isLogin, setIsLogin] = React.useState(
@@ -58,6 +59,7 @@ function App() {
                                 }
                             />
                             <Route path="/blog/:userid" element={<Blog />} />
+                            <Route path="/test" element={<Test />} />
                         </Routes>
                     </div>
                 </div>
