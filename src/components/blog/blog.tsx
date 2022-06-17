@@ -1,8 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Buffer } from "buffer";
 
 import config from "../../config/config.json";
+
+import { AiOutlineUser } from "react-icons/ai";
 
 import "./blog.scss";
 
@@ -36,6 +39,7 @@ const Blog: Function = () => {
 
     const [page, setPage] = useState(1);
     const [posts, setPosts] = useState([] as post[]);
+    const [ownerProfile, setOwnerProfile] = useState("");
 
     const getPostList = async () => {
         const result = await axios.get(
@@ -45,14 +49,34 @@ const Blog: Function = () => {
         setPosts(result.data.data);
     };
 
+    const getProfileImage = async () => {
+        let result = await axios.get(
+            `${config.baseurl}/member/getProfileImage?userid=${owner}`,
+            { headers: { Authorization: config.apikey } }
+        );
+
+        setOwnerProfile(new Buffer(result.data.image.data).toString("base64"));
+    };
+
     useEffect(() => {
         getPostList();
+        getProfileImage();
     }, []);
 
     return (
         <div className="blog-wrap">
             <div className="nav-left">
                 <div className="nav-left-profile">
+                    <div className="profile-image">
+                        {ownerProfile === "" ? (
+                            <AiOutlineUser className="image" />
+                        ) : (
+                            <img
+                                className="image"
+                                src={"data:image/jpeg;base64," + ownerProfile}
+                            />
+                        )}
+                    </div>
                     <p className="name">{sessionStorage.getItem("Name")}</p>
                     <p className="email">{sessionStorage.getItem("Email")}</p>
                 </div>

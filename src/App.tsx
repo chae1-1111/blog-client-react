@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Buffer } from "buffer";
+
 import "./App.scss";
 import Header from "./components/header";
 import Join from "./components/member/join";
@@ -11,16 +13,39 @@ import Mypage from "./components/member/mypage";
 
 import Blog from "./components/blog/blog";
 import Test from "./components/test";
+import axios from "axios";
+
+import config from "./config/config.json";
 
 function App() {
     const [isLogin, setIsLogin] = React.useState(
         sessionStorage.getItem("UserKey") ? true : false
     );
 
+    const [profileImage, setProfileImage] = React.useState("");
+
+    const getProfileImage = async () => {
+        let result = await axios.get(
+            `${
+                config.baseurl
+            }/member/getProfileImage?userid=${sessionStorage.getItem(
+                "UserId"
+            )}`,
+            { headers: { Authorization: config.apikey } }
+        );
+
+        setProfileImage(new Buffer(result.data.image.data).toString("base64"));
+    };
+
     return (
         <BrowserRouter>
             <div className="App">
-                <Header isLogin={isLogin} setIsLogin={setIsLogin} />
+                <Header
+                    isLogin={isLogin}
+                    setIsLogin={setIsLogin}
+                    profileImage={profileImage}
+                    getProfileImage={getProfileImage}
+                />
                 <div className="content-wrap">
                     <div className="content">
                         <Routes>
@@ -55,6 +80,8 @@ function App() {
                                     <Mypage
                                         isLogin={isLogin}
                                         setIsLogin={setIsLogin}
+                                        profileImage={profileImage}
+                                        getProfileImage={getProfileImage}
                                     />
                                 }
                             />

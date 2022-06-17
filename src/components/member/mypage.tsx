@@ -13,6 +13,8 @@ import EditProfile from "./mypages/editProfile";
 interface MyPageProps {
     isLogin: Boolean;
     setIsLogin: Function;
+    profileImage: string;
+    getProfileImage: () => void;
 }
 
 const Mypage = (props: MyPageProps) => {
@@ -36,7 +38,17 @@ const Mypage = (props: MyPageProps) => {
                         </div>
                         <div className="nav-left-profile">
                             <div className="profile-image">
-                                <AiOutlineUser size={100} />
+                                {props.profileImage === "" ? (
+                                    <AiOutlineUser className="image" />
+                                ) : (
+                                    <img
+                                        className="image"
+                                        src={
+                                            "data:image/jpeg;base64," +
+                                            props.profileImage
+                                        }
+                                    />
+                                )}
                                 <p
                                     onClick={() => {
                                         setViewPopup(true);
@@ -101,6 +113,8 @@ const Mypage = (props: MyPageProps) => {
                 <EditProfile
                     viewPopup={viewPopup}
                     setViewPopup={setViewPopup}
+                    profileImage={props.profileImage}
+                    getProfileImage={props.getProfileImage}
                 />
             )}
         </div>

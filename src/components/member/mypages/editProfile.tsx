@@ -11,6 +11,8 @@ import { AiOutlineUser } from "react-icons/ai";
 interface emailAuthProps {
     viewPopup: boolean;
     setViewPopup: (emailAuth: boolean) => void;
+    profileImage: string;
+    getProfileImage: () => void;
 }
 
 const EditProfile = (props: emailAuthProps) => {
@@ -72,6 +74,7 @@ const EditProfile = (props: emailAuthProps) => {
         );
         if (res.status === 200) {
             props.setViewPopup(false);
+            props.getProfileImage();
         } else {
             alert("업로드 실패\n잠시 후 다시 시도해주세요.");
         }
@@ -85,8 +88,16 @@ const EditProfile = (props: emailAuthProps) => {
                     <div className="profile-image">
                         {imageUrl ? (
                             <img src={imageUrl} className="preview" />
-                        ) : (
+                        ) : props.profileImage === "" ? (
                             <AiOutlineUser className="preview" />
+                        ) : (
+                            <img
+                                className="preview"
+                                src={
+                                    "data:image/jpeg;base64," +
+                                    props.profileImage
+                                }
+                            />
                         )}
                         <a
                             href="#none"

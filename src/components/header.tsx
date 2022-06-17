@@ -3,9 +3,13 @@ import "./header.scss";
 import { FaPaw, FaUser } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 
+import config from "../config/config.json";
+
 interface HeaderProps {
     isLogin: boolean;
     setIsLogin: (isLogin: boolean) => void;
+    profileImage: string;
+    getProfileImage: () => void;
 }
 
 const Header = (props: HeaderProps) => {
@@ -35,6 +39,10 @@ const Header = (props: HeaderProps) => {
             document.removeEventListener("mouseup", checkIfClickedOutside);
         };
     }, [viewProfile]);
+
+    useEffect(() => {
+        props.getProfileImage();
+    }, []);
 
     return (
         <div className="Header-wrap">
@@ -69,13 +77,26 @@ const Header = (props: HeaderProps) => {
                     {props.isLogin ? (
                         // 로그인 상태
                         <div>
-                            <FaUser
-                                className="user-icon"
-                                size={50}
-                                onClick={() => {
-                                    setViewProfile(true);
-                                }}
-                            />
+                            {props.profileImage === "" ? (
+                                <FaUser
+                                    className="user-icon"
+                                    size={50}
+                                    onClick={() => {
+                                        setViewProfile(true);
+                                    }}
+                                />
+                            ) : (
+                                <img
+                                    className="user-icon"
+                                    src={
+                                        "data:image/jpeg;base64," +
+                                        props.profileImage
+                                    }
+                                    onClick={() => {
+                                        setViewProfile(true);
+                                    }}
+                                />
+                            )}
                             {viewProfile && (
                                 <div className="profile-wrap" ref={profileRef}>
                                     <p className="profile-name">

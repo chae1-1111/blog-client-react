@@ -1,37 +1,35 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { Buffer } from "buffer";
+
+import config from "../config/config.json";
 
 const Test = () => {
-    const [image, setImage] = useState({} as File);
-    const [imageUrl, setImageUrl] = useState("");
+    const [image, setImage] = useState("");
 
-    const profileImage = useRef() as React.MutableRefObject<HTMLInputElement>;
+    const testFunc = async () => {
+        let result = await axios.get(
+            `${
+                config.baseurl
+            }/member/getProfileImage?userkey=${sessionStorage.getItem(
+                "UserKey"
+            )}`,
+            { headers: { Authorization: config.apikey } }
+        );
+
+        // console.log(result);
+        console.log(result.data);
+        // console.log(result.data.image.data.toString("base64"));
+        setImage(new Buffer(result.data.image.data).toString("base64"));
+    };
 
     useEffect(() => {
-        profileImage.current.addEventListener("change", () => {
-            console.log(profileImage.current.files);
-            setImage(
-                profileImage.current.files &&
-                    profileImage.current.files.length !== 0
-                    ? profileImage.current.files[0]
-                    : ({} as File)
-            );
-        });
+        testFunc();
     }, []);
-
-    useEffect(() => {
-        console.log(image);
-        setImageUrl("");
-        image.name && setImageUrl(URL.createObjectURL(image).toString());
-    }, [image]);
 
     return (
         <>
-            <input
-                type="file"
-                ref={profileImage}
-                accept="image/jpg image/jpeg image/png"
-            />
-            <img src={imageUrl} />
+            <img src={"data:image/jpeg;base64," + image} />
         </>
     );
 };
