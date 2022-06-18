@@ -34,12 +34,19 @@ const Post: Function = (props: post) => {
     );
 };
 
+interface BlogInfo {
+    Name?: String;
+    Email?: String;
+    Categories?: String[];
+    ProfileImage?: String;
+}
+
 const Blog: Function = () => {
     const owner = useParams().userid;
 
     const [page, setPage] = useState(1);
     const [posts, setPosts] = useState([] as post[]);
-    const [ownerProfile, setOwnerProfile] = useState("");
+    const [blogInfo, setBlogInfo] = useState({} as BlogInfo);
 
     const getPostList = async () => {
         const result = await axios.get(
@@ -51,11 +58,21 @@ const Blog: Function = () => {
 
     const getProfileImage = async () => {
         let result = await axios.get(
-            `${config.baseurl}/member/getProfileImage?userid=${owner}`,
+            `${config.baseurl}/member/getBlogInfo?userid=${owner}`,
             { headers: { Authorization: config.apikey } }
         );
 
-        setOwnerProfile(new Buffer(result.data.image.data).toString("base64"));
+        setBlogInfo({
+            Name: result.data.body.Name,
+            Email: result.data.body.Email,
+            Categories: result.data.body.Categories,
+            ProfileImage:
+                result.data.body.ProfileImage === ""
+                    ? result.data.body.ProfileImage
+                    : new Buffer(result.data.body.ProfileImage.data).toString(
+                          "base64"
+                      ),
+        });
     };
 
     useEffect(() => {
@@ -68,43 +85,39 @@ const Blog: Function = () => {
             <div className="nav-left">
                 <div className="nav-left-profile">
                     <div className="profile-image">
-                        {ownerProfile === "" ? (
-                            <AiOutlineUser className="image" />
-                        ) : (
+                        {blogInfo.ProfileImage &&
+                        blogInfo.ProfileImage !== "" ? (
                             <img
                                 className="image"
-                                src={"data:image/jpeg;base64," + ownerProfile}
+                                src={
+                                    "data:image/*;base64," +
+                                    blogInfo.ProfileImage
+                                }
                             />
+                        ) : (
+                            <AiOutlineUser className="image" />
                         )}
                     </div>
-                    <p className="name">{sessionStorage.getItem("Name")}</p>
-                    <p className="email">{sessionStorage.getItem("Email")}</p>
+                    <p className="name">{blogInfo.Name}</p>
+                    <p className="email">{blogInfo.Email}</p>
                 </div>
                 <div className="nav-left-list">
                     <div>
-                        <div className="nav-left-list-title">
-                            <h3>블로그 관리</h3>
-                        </div>
                         <ul>
-                            <a href="/mypage/configBlog">
-                                <li>블로그 설정</li>
+                            <a href={`/blog/${owner}`}>
+                                <li>전체 글 보기</li>
                             </a>
-                        </ul>
-                    </div>
-                    <div>
-                        <div className="nav-left-list-title">
-                            <h3>계정 관리</h3>
-                        </div>
-                        <ul>
-                            <a href="/mypage/modifyUser">
-                                <li>회원정보 수정</li>
-                            </a>
-                            <a href="/mypage/modifyPassword">
-                                <li>비밀번호 변경</li>
-                            </a>
-                            <a href="/mypage/removeAccount">
-                                <li>회원탈퇴</li>
-                            </a>
+                            {blogInfo.Categories &&
+                                blogInfo.Categories.map(
+                                    (category: String, index: number) => (
+                                        <a
+                                            href={`/blog/${owner}/${category}`}
+                                            key={index}
+                                        >
+                                            <li>{category}</li>
+                                        </a>
+                                    )
+                                )}
                         </ul>
                     </div>
                 </div>

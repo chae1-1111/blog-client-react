@@ -86,6 +86,10 @@ function App() {
                                 }
                             />
                             <Route path="/blog/:userid" element={<Blog />} />
+                            <Route
+                                path="/blog/:userid/:category"
+                                element={<Blog />}
+                            />
                             <Route path="/test" element={<Test />} />
                         </Routes>
                     </div>
