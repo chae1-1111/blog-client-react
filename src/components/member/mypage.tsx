@@ -72,7 +72,7 @@ const Mypage = (props: MyPageProps) => {
                                 </div>
                                 <ul>
                                     <a href="/mypage/configBlog">
-                                        <li>블로그 설정</li>
+                                        <li>카테고리 설정</li>
                                     </a>
                                 </ul>
                             </div>
