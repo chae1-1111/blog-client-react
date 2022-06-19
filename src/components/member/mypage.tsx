@@ -4,7 +4,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 
 import "./mypage.scss";
-import ConfigBlog from "./mypages/configBlog";
+import ConfigCategory from "./mypages/configCategory";
 import ModifyPassword from "./mypages/modifyPassword";
 import ModifyUser from "./mypages/modifyUser";
 import RemoveAccount from "./mypages/removeAccount";
@@ -97,7 +97,9 @@ const Mypage = (props: MyPageProps) => {
                     </div>
                     <div className="mypage-content-wrap">
                         <div className="mypage-content">
-                            {params.page === "configBlog" && <ConfigBlog />}
+                            {params.page === "configCategory" && (
+                                <ConfigCategory />
+                            )}
                             {params.page === "modifyUser" && <ModifyUser />}
                             {params.page === "modifyPassword" && (
                                 <ModifyPassword setIsLogin={props.setIsLogin} />
