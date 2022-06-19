@@ -71,7 +71,7 @@ const Mypage = (props: MyPageProps) => {
                                     <h3>블로그 관리</h3>
                                 </div>
                                 <ul>
-                                    <a href="/mypage/configBlog">
+                                    <a href="/mypage/configCategory">
                                         <li>카테고리 설정</li>
                                     </a>
                                 </ul>

@@ -102,7 +102,7 @@ const Header = (props: HeaderProps) => {
                                     <p className="profile-name">
                                         {sessionStorage.getItem("Name")}
                                     </p>
-                                    <a href="/mypage/configBlog">
+                                    <a href="/mypage/configCategory">
                                         <p className="profile-link">
                                             마이페이지
                                         </p>
