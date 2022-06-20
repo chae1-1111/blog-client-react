@@ -122,15 +122,15 @@ const Blog: Function = () => {
                     </div>
                 </div>
             </div>
-            <h1>Blog</h1>
-            <h3>{owner}</h3>
-            <ul>
-                {posts.map((item, id) => (
-                    <li key={id}>
-                        <Post {...item} />
-                    </li>
-                ))}
-            </ul>
+            <div className="blog-content-wrap">
+                <ul>
+                    {posts.map((item, id) => (
+                        <li key={id}>
+                            <Post {...item} />
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

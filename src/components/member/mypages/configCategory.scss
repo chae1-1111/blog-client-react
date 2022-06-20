@@ -4,8 +4,19 @@
     justify-content: center;
     flex-direction: column;
     width: 40%;
+    min-width: 350px;
     margin: 0 auto;
     position: relative;
+
+    .no-item {
+        width: 100%;
+        border: 1px solid #000;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #555;
+        padding: 0.8rem 0;
+    }
 
     .list-container {
         display: flex;

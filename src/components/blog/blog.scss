@@ -1,4 +1,10 @@
 div.blog-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+
     .nav-left {
         width: 25%;
         display: flex;
@@ -95,6 +101,15 @@ div.blog-wrap {
                     border-bottom: unset;
                 }
             }
+        }
+    }
+    .blog-content-wrap {
+        position: relative;
+        width: 75%;
+
+        .blog-content {
+            width: 90%;
+            margin: 0 auto;
         }
     }
 }

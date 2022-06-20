@@ -136,6 +136,27 @@ const ConfigCategory = () => {
         }
     };
 
+    const setCategories = async () => {
+        try {
+            let data = {
+                userkey: sessionStorage.getItem("UserKey"),
+                deletedCategory: [...deletedCategory],
+                Categories: [...itemList],
+            };
+            let result = await axios.put(
+                `${config.baseurl}/member/setCategories`,
+                data,
+                { headers: { Authorization: config.apikey } }
+            );
+            if (result.status === 200) {
+                alert("카테고리 설정이 완료되었습니다.");
+                window.location.href = "/mypage/configCategory";
+            }
+        } catch (err) {
+            alert("문제가 발생했습니다.\n잠시 후 다시 시도해주세요.");
+        }
+    };
+
     const handleDrop = (droppedItem: any) => {
         if (!droppedItem.destination) return;
         var updatedList = [...itemList];
@@ -290,7 +311,11 @@ const ConfigCategory = () => {
                                 (window.location.href = "/mypage/configBlog")
                             }
                         />
-                        <input type="button" value="저장" />
+                        <input
+                            type="button"
+                            value="저장"
+                            onClick={() => setCategories()}
+                        />
                     </div>
                 </div>
             </div>
