@@ -9,15 +9,7 @@ div.blog-wrap {
         width: 25%;
         display: flex;
         flex-direction: column;
-
-        .nav-left-title {
-            width: 100%;
-            text-align: center;
-
-            h2 {
-                margin-block-end: unset;
-            }
-        }
+        align-items: center;
 
         .nav-left-profile {
             width: 80%;
@@ -55,44 +47,59 @@ div.blog-wrap {
             }
         }
 
+        .nav-left-newPost {
+            width: 80%;
+            margin: 25px auto 0;
+            padding: 5% 1%;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #333;
+            box-sizing: border-box;
+            background-color: #eee;
+
+            &:hover {
+                background-color: #cdcdcd;
+            }
+        }
+
         .nav-left-list {
             position: relative;
             width: 80%;
-            margin: 50px auto 0;
+            margin: 25px auto 0;
             border: 1px solid #ccc;
             background-color: #fff;
             > div {
                 width: 100%;
                 box-sizing: border-box;
                 border-bottom: 1px solid #dfdfdf;
-                .nav-left-list-title {
-                    position: relative;
-                    padding-left: 20%;
-                    padding-top: 1rem;
-                    .icon {
-                        position: absolute;
-                        left: 7%;
-                    }
-
-                    h3 {
-                        margin: unset;
-                    }
-                }
 
                 ul {
                     list-style: none;
                     padding: unset;
-                    padding-left: 20%;
+                    padding-left: 15%;
                     margin: unset;
                     margin: 0.7rem auto;
 
                     li {
                         font-size: 0.8rem;
-                        color: #777;
-                        margin-bottom: 0.5rem;
+                        color: #333;
+                        margin: 0.8rem 0;
+                        display: flex;
+                        align-items: center;
 
                         &:hover {
                             text-decoration: underline;
+                        }
+                        &.sub-title {
+                            font-weight: bold;
+                            text-decoration: unset;
+                            margin: 1rem 0 1.3rem;
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: space-between;
+                            padding-right: 15%;
                         }
                     }
                 }
@@ -106,10 +113,98 @@ div.blog-wrap {
     .blog-content-wrap {
         position: relative;
         width: 75%;
+        margin-top: 50px;
 
         .blog-content {
             width: 90%;
             margin: 0 auto;
+            position: relative;
+            ul.post-list {
+                list-style-type: none;
+                padding: unset;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 2.5rem;
+
+                li {
+                    width: 45%;
+
+                    .post {
+                        width: 100%;
+                        border: 1px solid #ccc;
+                        background-color: #fff;
+                        padding: 1rem;
+                        box-sizing: border-box;
+
+                        .post-title {
+                            font-size: 1.4rem;
+                            a {
+                                &:hover {
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+
+                        .post-info {
+                            display: flex;
+                            flex-direction: row;
+                            font-size: 0.8rem;
+                            margin-bottom: 1rem;
+
+                            div {
+                                display: flex;
+                                align-items: center;
+                                margin-right: 1rem;
+
+                                &:last-child {
+                                    margin-right: unset;
+                                }
+
+                                span {
+                                    margin-left: 0.2rem;
+                                }
+                            }
+                        }
+
+                        .post-description {
+                            font-size: 0.9rem;
+                            a {
+                                color: #777;
+                                &:hover {
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .pages {
+                list-style: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: unset;
+
+                li {
+                    font-size: 0.9rem;
+                    color: #333;
+                    margin: 0 0.2rem;
+
+                    &.active,
+                    &:hover {
+                        text-decoration: underline;
+                    }
+
+                    &.active {
+                        color: #000;
+                        font-weight: bold;
+                    }
+                }
+            }
         }
     }
 }

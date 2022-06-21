@@ -87,7 +87,7 @@ function App() {
                             />
                             <Route path="/blog/:userid" element={<Blog />} />
                             <Route
-                                path="/blog/:userid/:category"
+                                path="/blog/:userid/:postkey"
                                 element={<Blog />}
                             />
                             <Route path="/test" element={<Test />} />
