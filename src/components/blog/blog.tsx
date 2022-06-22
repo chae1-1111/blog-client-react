@@ -15,6 +15,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { TbNotes, TbSettings } from "react-icons/tb";
 
 import "./blog.scss";
+import PostDetail from "./postDetail";
 
 interface post {
     Title: string;
@@ -246,7 +247,7 @@ const Blog: Function = () => {
                     </div>
                 ) : (
                     <div className="blog-content">
-                        <h2>글보기</h2>
+                        <PostDetail postKey={postKey} isOwner={isOwner} />
                     </div>
                 )}
             </div>

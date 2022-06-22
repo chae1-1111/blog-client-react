@@ -205,6 +205,53 @@ div.blog-wrap {
                     }
                 }
             }
+
+            .post-detail {
+                width: 100%;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                padding: 3rem;
+                .post-top-area {
+                    position: relative;
+
+                    .post-Category {
+                        font-size: 1.2rem;
+                        color: #aaa;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+
+                    .post-title {
+                        font-size: 2rem;
+                        margin: 1rem 0 2rem;
+                    }
+
+                    .post-info {
+                        margin-bottom: 1rem;
+                        .post-name {
+                            font-size: 1.1rem;
+                            margin-right: 1rem;
+                        }
+                        .post-created {
+                            color: #777;
+                        }
+                    }
+                    &::after {
+                        content: "";
+                        border-bottom: 1px solid #ccc;
+                        position: absolute;
+                        right: 0;
+                        left: 0;
+                    }
+                }
+
+                .post-description {
+                    margin-top: 3rem;
+                    font-size: 1.2rem;
+                }
+            }
         }
     }
 }
