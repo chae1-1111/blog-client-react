@@ -251,6 +251,140 @@ div.blog-wrap {
                     margin-top: 3rem;
                     font-size: 1.2rem;
                 }
+
+                .post-keywords {
+                    margin-top: 2rem;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    flex-wrap: wrap;
+                    align-items: center;
+
+                    .post-keyword {
+                        padding: 0.3rem;
+                        border-radius: 0.3rem;
+                        background-color: #eaeaea;
+                        margin-right: 0.5rem;
+                    }
+                }
+
+                .post-reply-info {
+                    .post-reaction {
+                        margin-top: 1rem;
+                        display: flex;
+                        flex-direction: row;
+                        position: relative;
+                        padding-bottom: 1rem;
+
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            border-bottom: 1px solid #ccc;
+                        }
+
+                        .post-like {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            font-size: 0.85rem;
+                            margin-right: 1rem;
+
+                            .icon-like {
+                                color: red;
+                                margin-right: 0.3rem;
+                            }
+                            .number-likes {
+                                margin-left: 0.2rem;
+                                font-weight: bold;
+                            }
+                        }
+                        .post-reply {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            font-size: 0.85rem;
+
+                            .icon-reply {
+                                margin-right: 0.3rem;
+                            }
+                            .number-reply {
+                                margin-left: 0.2rem;
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+                .post-reply-wrap {
+                    .post-reply-list-title {
+                        font-size: 1.15rem;
+                        font-weight: bold;
+                    }
+
+                    .post-reply-input-wrap {
+                        width: 100%;
+                        border: 2px solid #aaa;
+                        border-radius: 0.3rem;
+                        padding: 0.7rem;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+
+                        .post-reply-input-content {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: space-between;
+                            flex-wrap: wrap;
+                            margin-bottom: 0.7rem;
+
+                            .post-reply-input-name {
+                                font-weight: bold;
+                                font-size: 0.9rem;
+                            }
+
+                            .post-reply-length {
+                                font-size: 0.8rem;
+                                color: #777;
+
+                                &.none {
+                                    display: none;
+                                }
+
+                                .toolong {
+                                    color: red;
+                                    font-weight: bold;
+                                }
+                            }
+
+                            textarea.post-reply-input {
+                                font-size: 0.9rem;
+                                border: unset;
+                                border-radius: unset;
+                                margin: unset;
+                                width: 100%;
+                                padding: unset;
+                                height: unset;
+                                resize: none;
+                                overflow-wrap: break-word;
+                            }
+                        }
+
+                        .post-reply-submit {
+                            font-size: 0.9rem;
+                            font-weight: bold;
+                            color: #aaa;
+                            padding: 0.5rem;
+                            border-radius: 0.5rem;
+                            &.active {
+                                background-color: #ddd;
+                                color: #000;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

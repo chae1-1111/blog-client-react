@@ -6,10 +6,10 @@ import { Buffer } from "buffer";
 import config from "../../config/config.json";
 
 import {
+    FaHeart,
     FaPlus,
     FaRegCalendarAlt,
     FaRegComment,
-    FaRegThumbsUp,
 } from "react-icons/fa";
 import { AiOutlineUser } from "react-icons/ai";
 import { TbNotes, TbSettings } from "react-icons/tb";
@@ -50,7 +50,7 @@ const Post: Function = (props: postProps) => {
                     <span>{props.post.Replys.toString()}</span>
                 </div>
                 <div className="post-likes">
-                    <FaRegThumbsUp />
+                    <FaHeart />
                     <span>{props.post.Likes.toString()}</span>
                 </div>
             </div>
