@@ -36,7 +36,7 @@ const Post: Function = (props: postProps) => {
     return (
         <div className="post">
             <div className="post-title">
-                <a href={`/blog/${props.userid}/${props.post.PostKey}`}>
+                <a href={`/blog/${props.userid}/detail/${props.post.PostKey}`}>
                     {props.post.Title}
                 </a>
             </div>
@@ -55,7 +55,7 @@ const Post: Function = (props: postProps) => {
                 </div>
             </div>
             <div className="post-description">
-                <a href={`/blog/${props.userid}/${props.post.PostKey}`}>
+                <a href={`/blog/${props.userid}/detail/${props.post.PostKey}`}>
                     {props.post.Description}
                 </a>
             </div>
@@ -73,14 +73,20 @@ interface BlogInfo {
     ProfileImage?: String;
 }
 
-const Blog: Function = () => {
+interface BlogProps {
+    isLogin: boolean;
+}
+
+const Blog: Function = (props: BlogProps) => {
     const params = useParams();
 
     const [page, setPage] = useState(1);
     const [posts, setPosts] = useState([] as post[]);
     const [blogInfo, setBlogInfo] = useState({} as BlogInfo);
     const [isOwner, setIsOwner] = useState(false);
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState(
+        params.category ? params.category : ""
+    );
     const [postKey, setPostKey] = useState(
         params.postkey ? parseInt(params.postkey) : -1
     );
@@ -138,10 +144,10 @@ const Blog: Function = () => {
 
     useEffect(() => {
         getPostList();
-    }, [category, page]);
+    }, [category, page, postKey]);
 
     useEffect(() => {
-        setArrPages();
+        postKey === -1 && setArrPages();
     }, [blogInfo, category]);
 
     return (
@@ -184,12 +190,7 @@ const Blog: Function = () => {
                                     </a>
                                 )}
                             </li>
-                            <a
-                                onClick={() => {
-                                    setCategory("");
-                                    setPostKey(-1);
-                                }}
-                            >
+                            <a href={`/blog/${params.userid}`}>
                                 <li>
                                     <TbNotes />
                                     {`전체 글 보기 (${
@@ -203,10 +204,7 @@ const Blog: Function = () => {
                                 blogInfo.CategoryInfo.eachCategory.map(
                                     (obj: any, index: number) => (
                                         <a
-                                            onClick={() => {
-                                                setCategory(obj.Category);
-                                                setPostKey(-1);
-                                            }}
+                                            href={`/blog/${params.userid}/${obj.Category}`}
                                             key={index}
                                         >
                                             <li>
@@ -247,7 +245,11 @@ const Blog: Function = () => {
                     </div>
                 ) : (
                     <div className="blog-content">
-                        <PostDetail postKey={postKey} isOwner={isOwner} />
+                        <PostDetail
+                            postKey={postKey}
+                            isOwner={isOwner}
+                            isLogin={props.isLogin}
+                        />
                     </div>
                 )}
             </div>

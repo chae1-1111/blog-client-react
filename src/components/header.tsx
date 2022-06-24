@@ -41,7 +41,7 @@ const Header = (props: HeaderProps) => {
     }, [viewProfile]);
 
     useEffect(() => {
-        props.getProfileImage();
+        props.isLogin && props.getProfileImage();
     }, []);
 
     return (

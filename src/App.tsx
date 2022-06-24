@@ -85,10 +85,17 @@ function App() {
                                     />
                                 }
                             />
-                            <Route path="/blog/:userid" element={<Blog />} />
                             <Route
-                                path="/blog/:userid/:postkey"
-                                element={<Blog />}
+                                path="/blog/:userid/detail/:postkey"
+                                element={<Blog isLogin={isLogin} />}
+                            />
+                            <Route
+                                path="/blog/:userid/:category"
+                                element={<Blog isLogin={isLogin} />}
+                            />
+                            <Route
+                                path="/blog/:userid"
+                                element={<Blog isLogin={isLogin} />}
                             />
                             <Route path="/test" element={<Test />} />
                         </Routes>
