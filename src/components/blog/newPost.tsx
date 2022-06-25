@@ -34,6 +34,9 @@ const NewPost: Function = (props: PropsType) => {
     const [categories, setCategories] = useState([] as string[]);
     const [keywords, setKeywords] = useState([] as string[]);
 
+    const categoryRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
+    const titleRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+    const contentRef = useRef() as React.MutableRefObject<HTMLTextAreaElement>;
     const newTagInput = useRef() as React.MutableRefObject<HTMLInputElement>;
 
     useEffect(() => {
@@ -50,7 +53,6 @@ const NewPost: Function = (props: PropsType) => {
     }, [keywords]);
 
     const addKeyword = async (e: any) => {
-        console.log(e.key);
         if (e.key === "Enter") {
             let keyword = newTagInput.current.value;
             if (keyword.trim().length > 0 && keywords.indexOf(keyword) === -1) {
@@ -74,26 +76,113 @@ const NewPost: Function = (props: PropsType) => {
             { headers: { Authorization: config.apikey } }
         );
         if (result.status === 200) {
+            if (result.data.body.Categories.length === 0) {
+                alert("게시글을 작성하기 전 카테고리를 설정해주세요.");
+                window.location.href = "/mypage/configCategory";
+            }
             setCategories(result.data.body.Categories);
         }
     };
 
     const getPostDetail = async () => {
         try {
+            let isOwner = (
+                await axios.get(
+                    `${config.baseurl}/post/isOwner?postkey=${
+                        params.postKey
+                    }&userkey=${sessionStorage.getItem("UserKey")}`,
+                    { headers: { Authorization: config.apikey } }
+                )
+            ).data.isOwner;
+            if (!isOwner) {
+                alert("본인이 작성한 글만 수정 가능합니다.");
+                window.location.href = `/blog/${sessionStorage.getItem(
+                    "UserId"
+                )}/detail/${params.postKey}`;
+            }
             let result = await axios.get(
-                `${config.baseurl}/post/detail/${params.postKey}?userkey=${
-                    sessionStorage.getItem("UserKey")
-                        ? sessionStorage.getItem("UserKey")
-                        : -1
-                }`,
+                `${config.baseurl}/post/detail/${
+                    params.postKey
+                }?userkey=${sessionStorage.getItem(
+                    "UserKey"
+                )}&userid=${sessionStorage.getItem("UserId")}`,
                 { headers: { Authorization: config.apikey } }
             );
             if (result.status === 200) {
-                if (!result.data.data.isOwner) {
-                    alert("본인이 작성한 글만 수정 가능합니다.");
-                    window.location.href = `/blog/${result.data.data.UserId}/detail/${params.postKey}`;
-                }
                 setPost(result.data.data);
+                setKeywords(result.data.data.Keyword);
+            }
+        } catch (err) {
+            console.log(err);
+            alert("잠시 후 다시 시도해주세요.");
+        }
+    };
+
+    const checkPost = () => {
+        if (titleRef.current.value.trim().length === 0) {
+            alert("제목을 입력해주세요.");
+            titleRef.current.focus();
+            return false;
+        } else if (contentRef.current.value.trim().length === 0) {
+            alert("내용을 입력해주세요.");
+            contentRef.current.focus();
+            return false;
+        } else if (
+            categories.length !== 0 &&
+            categoryRef.current.value === ""
+        ) {
+            alert("카테고리를 선택해주세요");
+            contentRef.current.focus();
+            return false;
+        }
+        return true;
+    };
+
+    const savePost = async () => {
+        if (!checkPost()) return;
+        try {
+            let result = await axios.post(
+                `${config.baseurl}/post`,
+                {
+                    userkey: sessionStorage.getItem("UserKey"),
+                    title: titleRef.current.value,
+                    description: contentRef.current.value,
+                    keyword: keywords,
+                    category: categoryRef.current.value,
+                },
+                { headers: { Authorization: config.apikey } }
+            );
+            if (result.status === 200) {
+                window.location.href = `/blog/${sessionStorage.getItem(
+                    "UserId"
+                )}/detail/${result.data.postkey}`;
+            }
+        } catch (err) {
+            console.log(err);
+            alert("잠시 후 다시 시도해주세요.");
+        }
+    };
+
+    const editPost = async () => {
+        if (!checkPost()) return;
+        try {
+            let result = await axios.put(
+                `${config.baseurl}/post`,
+                {
+                    postkey: params.postKey,
+                    userkey: sessionStorage.getItem("UserKey"),
+                    title: titleRef.current.value,
+                    description: contentRef.current.value,
+                    keyword: keywords,
+                    category: categoryRef.current.value,
+                },
+                { headers: { Authorization: config.apikey } }
+            );
+            console.log(result);
+            if (result.status === 200) {
+                window.location.href = `/blog/${sessionStorage.getItem(
+                    "UserId"
+                )}/detail/${params.postKey}`;
             }
         } catch (err) {
             console.log(err);
@@ -104,7 +193,10 @@ const NewPost: Function = (props: PropsType) => {
     return (
         <div className="new-post-wrap">
             <div className="new-post-top">
-                <select defaultValue="">
+                <select
+                    defaultValue={post.Category && post.Category}
+                    ref={categoryRef}
+                >
                     <option value="" disabled style={{ display: "none" }}>
                         카테고리
                     </option>
@@ -117,14 +209,22 @@ const NewPost: Function = (props: PropsType) => {
                         </option>
                     ))}
                 </select>
-                <input type="text" placeholder="제목을 입력해주세요." />
+                <input
+                    type="text"
+                    placeholder="제목을 입력해주세요."
+                    defaultValue={post.Title && post.Title}
+                    ref={titleRef}
+                />
             </div>
             <div className="new-post-content">
-                <textarea></textarea>
+                <textarea
+                    ref={contentRef}
+                    defaultValue={post.Description}
+                ></textarea>
             </div>
             <div className="new-post-tags">
-                {keywords.map((keyword) => (
-                    <span className="new-post-keyword">
+                {keywords.map((keyword, index) => (
+                    <span className="new-post-keyword" key={index}>
                         <FaHashtag size={14} />
                         <span>{keyword}</span>
                         <FaTimes
@@ -148,7 +248,13 @@ const NewPost: Function = (props: PropsType) => {
                 </div>
             </div>
             <div className="new-post-button-wrap">
-                <button>등록</button>
+                <div className="new-post-button">
+                    {post.Title ? (
+                        <button onClick={() => editPost()}>수정</button>
+                    ) : (
+                        <button onClick={() => savePost()}>등록</button>
+                    )}
+                </div>
             </div>
         </div>
     );

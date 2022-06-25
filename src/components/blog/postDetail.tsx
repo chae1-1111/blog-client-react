@@ -78,6 +78,19 @@ const PostDetail: Function = (props: PropsType) => {
         useRef() as React.MutableRefObject<HTMLAnchorElement>;
     const postMenu = useRef() as React.MutableRefObject<HTMLDivElement>;
 
+    const incViews = async () => {
+        try {
+            let result = await axios.put(
+                `${config.baseurl}/post/incViews`,
+                { postkey: props.postKey },
+                { headers: { Authorization: config.apikey } }
+            );
+        } catch (err) {
+            console.log(err);
+            alert("잠시 후 다시 시도해주세요.");
+        }
+    };
+
     const getPostDetail = async () => {
         try {
             let result = await axios.get(
@@ -277,7 +290,19 @@ const PostDetail: Function = (props: PropsType) => {
 
     const dateTimeFormatter = (d: string) => {
         let date = new Date(d);
-        return `${date.getFullYear()}.${date.getMonth()}.${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+        return `${date.getFullYear()}.${date
+            .getMonth()
+            .toString()
+            .padStart(2, "0")}.${date
+            .getDate()
+            .toString()
+            .padStart(2, "0")} ${date
+            .getHours()
+            .toString()
+            .padStart(2, "0")}:${date
+            .getMinutes()
+            .toString()
+            .padStart(2, "0")}`;
     };
 
     return (
@@ -316,7 +341,11 @@ const PostDetail: Function = (props: PropsType) => {
                                 >
                                     {props.isOwner && (
                                         <>
-                                            <a>수정</a>
+                                            <a
+                                                href={`/newPost/${props.postKey}`}
+                                            >
+                                                수정
+                                            </a>
                                             <a onClick={() => removePost()}>
                                                 삭제
                                             </a>
@@ -327,7 +356,14 @@ const PostDetail: Function = (props: PropsType) => {
                             </div>
                         </div>
                     </div>
-                    <div className="post-description">{post.Description}</div>
+                    <div className="post-description">
+                        {post.Description.split("\n").map((line, index) => (
+                            <p key={index}>
+                                {line}
+                                <br />
+                            </p>
+                        ))}
+                    </div>
                     <div className="post-keywords">
                         {post.Keyword.map((keyword, index) => (
                             <span className="post-keyword" key={index}>
@@ -470,9 +506,16 @@ const PostDetail: Function = (props: PropsType) => {
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <p className="post-reply-content">
-                                                        {reply.Content}
-                                                    </p>
+                                                    <div className="post-reply-content">
+                                                        {reply.Content.split(
+                                                            "\n"
+                                                        ).map((line, index) => (
+                                                            <p key={index}>
+                                                                {line}
+                                                                <br />
+                                                            </p>
+                                                        ))}
+                                                    </div>
                                                     <p className="post-reply-created">
                                                         {dateTimeFormatter(
                                                             reply.Created

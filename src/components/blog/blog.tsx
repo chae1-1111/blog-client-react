@@ -39,7 +39,10 @@ interface postProps {
 const Post: Function = (props: postProps) => {
     const dateFormatter = (d: string) => {
         let date = new Date(d);
-        return `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
+        return `${date.getFullYear()}.${date
+            .getMonth()
+            .toString()
+            .padStart(2, "0")}.${date.getDate().toString().padStart(2, "0")}`;
     };
 
     return (
@@ -111,13 +114,14 @@ const Blog: Function = (props: BlogProps) => {
             { headers: { Authorization: config.apikey } }
         );
         setPosts(result.data.data);
-        setIsOwner(result.data.owner);
     };
 
     const getBlogInfo = async () => {
         try {
             let result = await axios.get(
-                `${config.baseurl}/member/getBlogInfo?userid=${params.userid}`,
+                `${config.baseurl}/member/getBlogInfo?userid=${
+                    params.userid
+                }&userkey=${sessionStorage.getItem("UserKey")}`,
                 { headers: { Authorization: config.apikey } }
             );
 
@@ -133,6 +137,7 @@ const Blog: Function = (props: BlogProps) => {
                                   result.data.body.ProfileImage.data
                               ).toString("base64"),
                 });
+                setIsOwner(result.data.body.isOwner);
             } else if (result.status === 201) {
                 alert("존재하지 않는 블로그입니다.");
                 window.location.href = "/";
@@ -240,58 +245,68 @@ const Blog: Function = (props: BlogProps) => {
                     <div className="blog-content">
                         <h2>{category === "" ? "전체 글 보기" : category}</h2>
                         <ul className="post-list">
+                            {posts.length === 0 && (
+                                <div className="no-result">
+                                    <p>게시글이 존재하지 않습니다.</p>
+                                    {isOwner && (
+                                        <a href="/newPost">글쓰러 가기 &gt;</a>
+                                    )}
+                                </div>
+                            )}
                             {posts.map((item, id) => (
                                 <li key={id}>
                                     <Post post={item} userid={params.userid} />
                                 </li>
                             ))}
                         </ul>
-                        <ul className="pages">
-                            <li>
-                                <a href="#none" onClick={() => setPage(1)}>
-                                    <FaAngleDoubleLeft />
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#none"
-                                    onClick={() =>
-                                        page - 1 !== 0 && setPage(page - 1)
-                                    }
-                                >
-                                    <FaAngleLeft />
-                                </a>
-                            </li>
-                            {pages.map((p, id) => (
-                                <li
-                                    className={page === p ? "active" : ""}
-                                    key={id}
-                                >
-                                    <a href="#" onClick={() => setPage(p)}>
-                                        {p}
+                        {pages.length !== 0 && (
+                            <ul className="pages">
+                                <li>
+                                    <a href="#none" onClick={() => setPage(1)}>
+                                        <FaAngleDoubleLeft />
                                     </a>
                                 </li>
-                            ))}
-                            <li>
-                                <a
-                                    href="#none"
-                                    onClick={() =>
-                                        pages.indexOf(page + 1) !== -1 &&
-                                        setPage(page + 1)
-                                    }
-                                >
-                                    <FaAngleRight />
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#none"
-                                    onClick={() => setPage(pages.length)}
-                                >
-                                    <FaAngleDoubleRight />
-                                </a>
-                            </li>
-                        </ul>
+                                <li>
+                                    <a
+                                        href="#none"
+                                        onClick={() =>
+                                            page - 1 !== 0 && setPage(page - 1)
+                                        }
+                                    >
+                                        <FaAngleLeft />
+                                    </a>
+                                </li>
+                                {pages.map((p, id) => (
+                                    <li
+                                        className={page === p ? "active" : ""}
+                                        key={id}
+                                    >
+                                        <a href="#" onClick={() => setPage(p)}>
+                                            {p}
+                                        </a>
+                                    </li>
+                                ))}
+                                <li>
+                                    <a
+                                        href="#none"
+                                        onClick={() =>
+                                            pages.indexOf(page + 1) !== -1 &&
+                                            setPage(page + 1)
+                                        }
+                                    >
+                                        <FaAngleRight />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="#none"
+                                        onClick={() => setPage(pages.length)}
+                                    >
+                                        <FaAngleDoubleRight />
+                                    </a>
+                                </li>
+                            </ul>
+                        )}
                     </div>
                 ) : (
                     blogInfo.Name && (
