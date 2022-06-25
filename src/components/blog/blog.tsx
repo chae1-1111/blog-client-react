@@ -10,6 +10,10 @@ import {
     FaPlus,
     FaRegCalendarAlt,
     FaRegComment,
+    FaAngleDoubleLeft,
+    FaAngleLeft,
+    FaAngleDoubleRight,
+    FaAngleRight,
 } from "react-icons/fa";
 import { AiOutlineUser } from "react-icons/ai";
 import { TbNotes, TbSettings } from "react-icons/tb";
@@ -33,6 +37,11 @@ interface postProps {
 }
 
 const Post: Function = (props: postProps) => {
+    const dateFormatter = (d: string) => {
+        let date = new Date(d);
+        return `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
+    };
+
     return (
         <div className="post">
             <div className="post-title">
@@ -43,7 +52,7 @@ const Post: Function = (props: postProps) => {
             <div className="post-info">
                 <div className="post-created">
                     <FaRegCalendarAlt />
-                    <span>{props.post.Created.split("T")[0]}</span>
+                    <span>{dateFormatter(props.post.Created)}</span>
                 </div>
                 <div className="post-comments">
                     <FaRegComment />
@@ -106,22 +115,32 @@ const Blog: Function = (props: BlogProps) => {
     };
 
     const getBlogInfo = async () => {
-        let result = await axios.get(
-            `${config.baseurl}/member/getBlogInfo?userid=${params.userid}`,
-            { headers: { Authorization: config.apikey } }
-        );
+        try {
+            let result = await axios.get(
+                `${config.baseurl}/member/getBlogInfo?userid=${params.userid}`,
+                { headers: { Authorization: config.apikey } }
+            );
 
-        setBlogInfo({
-            Name: result.data.body.Name,
-            Email: result.data.body.Email,
-            CategoryInfo: result.data.body.CategoryInfo,
-            ProfileImage:
-                result.data.body.ProfileImage === ""
-                    ? result.data.body.ProfileImage
-                    : new Buffer(result.data.body.ProfileImage.data).toString(
-                          "base64"
-                      ),
-        });
+            if (result.status === 200) {
+                setBlogInfo({
+                    Name: result.data.body.Name,
+                    Email: result.data.body.Email,
+                    CategoryInfo: result.data.body.CategoryInfo,
+                    ProfileImage:
+                        result.data.body.ProfileImage === ""
+                            ? result.data.body.ProfileImage
+                            : new Buffer(
+                                  result.data.body.ProfileImage.data
+                              ).toString("base64"),
+                });
+            } else if (result.status === 201) {
+                alert("존재하지 않는 블로그입니다.");
+                window.location.href = "/";
+            }
+        } catch (err) {
+            console.log(err);
+            alert("잠시 후 다시 시도해주세요.");
+        }
     };
 
     const setArrPages = () => {
@@ -143,7 +162,7 @@ const Blog: Function = (props: BlogProps) => {
     }, []);
 
     useEffect(() => {
-        getPostList();
+        postKey === -1 && getPostList();
     }, [category, page, postKey]);
 
     useEffect(() => {
@@ -172,12 +191,9 @@ const Blog: Function = (props: BlogProps) => {
                     <p className="email">{blogInfo.Email}</p>
                 </div>
                 {isOwner && (
-                    <div
-                        className="nav-left-newPost"
-                        onClick={() => console.log("blogInfo")}
-                    >
+                    <a className="nav-left-newPost" href="/newPost">
                         <FaPlus />글 쓰러 가기
-                    </div>
+                    </a>
                 )}
                 <div className="nav-left-list">
                     <div>
@@ -231,6 +247,21 @@ const Blog: Function = (props: BlogProps) => {
                             ))}
                         </ul>
                         <ul className="pages">
+                            <li>
+                                <a href="#none" onClick={() => setPage(1)}>
+                                    <FaAngleDoubleLeft />
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#none"
+                                    onClick={() =>
+                                        page - 1 !== 0 && setPage(page - 1)
+                                    }
+                                >
+                                    <FaAngleLeft />
+                                </a>
+                            </li>
                             {pages.map((p, id) => (
                                 <li
                                     className={page === p ? "active" : ""}
@@ -241,16 +272,38 @@ const Blog: Function = (props: BlogProps) => {
                                     </a>
                                 </li>
                             ))}
+                            <li>
+                                <a
+                                    href="#none"
+                                    onClick={() =>
+                                        pages.indexOf(page + 1) !== -1 &&
+                                        setPage(page + 1)
+                                    }
+                                >
+                                    <FaAngleRight />
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#none"
+                                    onClick={() => setPage(pages.length)}
+                                >
+                                    <FaAngleDoubleRight />
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 ) : (
-                    <div className="blog-content">
-                        <PostDetail
-                            postKey={postKey}
-                            isOwner={isOwner}
-                            isLogin={props.isLogin}
-                        />
-                    </div>
+                    blogInfo.Name && (
+                        <div className="blog-content">
+                            <PostDetail
+                                postKey={postKey}
+                                isOwner={isOwner}
+                                isLogin={props.isLogin}
+                                userid={params.userid}
+                            />
+                        </div>
+                    )
                 )}
             </div>
         </div>

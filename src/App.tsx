@@ -16,6 +16,7 @@ import Test from "./components/test";
 import axios from "axios";
 
 import config from "./config/config.json";
+import NewPost from "./components/blog/newPost";
 
 function App() {
     const [isLogin, setIsLogin] = React.useState(
@@ -96,6 +97,14 @@ function App() {
                             <Route
                                 path="/blog/:userid"
                                 element={<Blog isLogin={isLogin} />}
+                            />
+                            <Route
+                                path="/newPost"
+                                element={<NewPost isLogin={isLogin} />}
+                            />
+                            <Route
+                                path="/newPost/:postKey"
+                                element={<NewPost isLogin={isLogin} />}
                             />
                             <Route path="/test" element={<Test />} />
                         </Routes>

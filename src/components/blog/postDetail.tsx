@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 
-import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa";
+import { FaRegHeart, FaHeart, FaRegComment, FaEllipsisV } from "react-icons/fa";
 
 import config from "../../config/config.json";
 
 interface PropsType {
     postKey: number;
+    userid: string;
     isOwner: boolean;
     isLogin: boolean;
 }
@@ -43,11 +44,30 @@ const PostDetail: Function = (props: PropsType) => {
     const [replyEditLength, setReplyEditLength] = useState(0);
     const [editReplyKey, setEditReplyKey] = useState(-1);
     const [likeButtonActive, setLikeButtonActive] = useState(!props.isLogin);
+    const [postMenuActive, setPostMenuActive] = useState(false);
 
     useEffect(() => {
         getPostDetail();
         getReplyList();
     }, []);
+
+    useEffect(() => {
+        const checkIfClickedOutside = (e: any) => {
+            if (
+                postMenuActive &&
+                postMenu.current &&
+                !postMenu.current.contains(e.target)
+            ) {
+                setPostMenuActive(false);
+            }
+        };
+
+        document.addEventListener("mouseup", checkIfClickedOutside);
+
+        return () => {
+            document.removeEventListener("mouseup", checkIfClickedOutside);
+        };
+    }, [postMenuActive]);
 
     const newReplyContent =
         useRef() as React.MutableRefObject<HTMLTextAreaElement>;
@@ -56,6 +76,7 @@ const PostDetail: Function = (props: PropsType) => {
     const replyButton = useRef() as React.MutableRefObject<HTMLAnchorElement>;
     const replyEditButton =
         useRef() as React.MutableRefObject<HTMLAnchorElement>;
+    const postMenu = useRef() as React.MutableRefObject<HTMLDivElement>;
 
     const getPostDetail = async () => {
         try {
@@ -64,14 +85,47 @@ const PostDetail: Function = (props: PropsType) => {
                     sessionStorage.getItem("UserKey")
                         ? sessionStorage.getItem("UserKey")
                         : -1
-                }`,
+                }&userid=${props.userid}`,
                 { headers: { Authorization: config.apikey } }
             );
             if (result.status === 200) {
+                if (!result.data.data.Title) {
+                    alert("존재하지 않는 게시글입니다.");
+                    window.location.href = `/blog/${props.userid}`;
+                }
                 setPost(result.data.data);
             }
         } catch (err) {
             console.log(err);
+            alert("잠시 후 다시 시도해주세요.");
+        }
+    };
+
+    const removePost = async () => {
+        if (
+            !window.confirm(
+                "게시글 삭제 시 복원이 불가능합니다.\n정말로 삭제하시겠습니까?"
+            )
+        ) {
+            return;
+        }
+        try {
+            let result = await axios.delete(`${config.baseurl}/post`, {
+                data: {
+                    userkey: sessionStorage.getItem("UserKey"),
+                    postkey: props.postKey,
+                },
+                headers: { Authorization: config.apikey },
+            });
+            if (result.status === 200) {
+                alert("게시글이 삭제되었습니다.");
+                window.location.href = `/blog/${post.UserId}`;
+            } else if (result.status === 201) {
+                alert("일치하는 정보가 존재하지 않습니다.");
+            }
+        } catch (err) {
+            console.log(err);
+            alert("잠시 후 다시 시도해주세요.");
         }
     };
 
@@ -221,7 +275,7 @@ const PostDetail: Function = (props: PropsType) => {
         setReplyEditLength(replyEditContent.current.value.length);
     };
 
-    const dateFormatter = (d: string) => {
+    const dateTimeFormatter = (d: string) => {
         let date = new Date(d);
         return `${date.getFullYear()}.${date.getMonth()}.${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     };
@@ -239,15 +293,38 @@ const PostDetail: Function = (props: PropsType) => {
                         </a>
                         <div className="post-title">{post.Title}</div>
                         <div className="post-info">
-                            <a
-                                className="post-name"
-                                href={`/blog/${post.UserId}`}
-                            >
-                                {post.Name}
-                            </a>
-                            <span className="post-created">
-                                {dateFormatter(post.Created)}
-                            </span>
+                            <div>
+                                <a
+                                    className="post-name"
+                                    href={`/blog/${post.UserId}`}
+                                >
+                                    {post.Name}
+                                </a>
+                                <span className="post-created">
+                                    {dateTimeFormatter(post.Created)}
+                                </span>
+                            </div>
+                            <div className="post-menu">
+                                <FaEllipsisV
+                                    onClick={() => setPostMenuActive(true)}
+                                />
+                                <div
+                                    className={`post-menu-list ${
+                                        !postMenuActive && "hidden"
+                                    }`}
+                                    ref={postMenu}
+                                >
+                                    {props.isOwner && (
+                                        <>
+                                            <a>수정</a>
+                                            <a onClick={() => removePost()}>
+                                                삭제
+                                            </a>
+                                        </>
+                                    )}
+                                    <a>신고</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="post-description">{post.Description}</div>
@@ -397,7 +474,7 @@ const PostDetail: Function = (props: PropsType) => {
                                                         {reply.Content}
                                                     </p>
                                                     <p className="post-reply-created">
-                                                        {dateFormatter(
+                                                        {dateTimeFormatter(
                                                             reply.Created
                                                         )}
                                                     </p>
