@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { FaTimes, FaHashtag } from "react-icons/fa";
 
 import config from "../../config/config.json";
+import mainKeywords from "../member/keywords.json";
 import "./blog.scss";
 
 interface PropsType {
@@ -35,6 +36,8 @@ const NewPost: Function = (props: PropsType) => {
     const [keywords, setKeywords] = useState([] as string[]);
 
     const categoryRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
+    const mainKeywordRef =
+        useRef() as React.MutableRefObject<HTMLSelectElement>;
     const titleRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const contentRef = useRef() as React.MutableRefObject<HTMLTextAreaElement>;
     const newTagInput = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -109,8 +112,13 @@ const NewPost: Function = (props: PropsType) => {
                 { headers: { Authorization: config.apikey } }
             );
             if (result.status === 200) {
-                setPost(result.data.data);
-                setKeywords(result.data.data.Keyword);
+                await setPost(result.data.data);
+                await setKeywords(
+                    result.data.data.Keyword.filter(
+                        (k: string) => k !== result.data.data.Keyword[0]
+                    )
+                );
+                mainKeywordRef.current.value = result.data.data.Keyword[0];
             }
         } catch (err) {
             console.log(err);
@@ -119,19 +127,20 @@ const NewPost: Function = (props: PropsType) => {
     };
 
     const checkPost = () => {
-        if (titleRef.current.value.trim().length === 0) {
+        if (categories.length !== 0 && categoryRef.current.value === "") {
+            alert("카테고리를 선택해주세요");
+            contentRef.current.focus();
+            return false;
+        } else if (mainKeywordRef.current.value === "") {
+            alert("메인 키워드를 선택해주세요");
+            mainKeywordRef.current.focus();
+            return false;
+        } else if (titleRef.current.value.trim().length === 0) {
             alert("제목을 입력해주세요.");
             titleRef.current.focus();
             return false;
         } else if (contentRef.current.value.trim().length === 0) {
             alert("내용을 입력해주세요.");
-            contentRef.current.focus();
-            return false;
-        } else if (
-            categories.length !== 0 &&
-            categoryRef.current.value === ""
-        ) {
-            alert("카테고리를 선택해주세요");
             contentRef.current.focus();
             return false;
         }
@@ -147,7 +156,7 @@ const NewPost: Function = (props: PropsType) => {
                     userkey: sessionStorage.getItem("UserKey"),
                     title: titleRef.current.value,
                     description: contentRef.current.value,
-                    keyword: keywords,
+                    keyword: [mainKeywordRef.current.value, ...keywords],
                     category: categoryRef.current.value,
                 },
                 { headers: { Authorization: config.apikey } }
@@ -173,7 +182,7 @@ const NewPost: Function = (props: PropsType) => {
                     userkey: sessionStorage.getItem("UserKey"),
                     title: titleRef.current.value,
                     description: contentRef.current.value,
-                    keyword: keywords,
+                    keyword: [mainKeywordRef.current.value, ...keywords],
                     category: categoryRef.current.value,
                 },
                 { headers: { Authorization: config.apikey } }
@@ -193,22 +202,34 @@ const NewPost: Function = (props: PropsType) => {
     return (
         <div className="new-post-wrap">
             <div className="new-post-top">
-                <select
-                    defaultValue={post.Category && post.Category}
-                    ref={categoryRef}
-                >
-                    <option value="" disabled style={{ display: "none" }}>
-                        카테고리
-                    </option>
-                    {categories.length === 0 && (
-                        <option value="">카테고리 없음</option>
-                    )}
-                    {categories.map((category, index) => (
-                        <option value={category} key={index}>
-                            {category}
+                <div>
+                    <select
+                        defaultValue={post.Category ? post.Category : ""}
+                        ref={categoryRef}
+                    >
+                        <option value="" disabled style={{ display: "none" }}>
+                            카테고리
                         </option>
-                    ))}
-                </select>
+                        {categories.length === 0 && (
+                            <option value="">카테고리 없음</option>
+                        )}
+                        {categories.map((category, index) => (
+                            <option value={category} key={index}>
+                                {category}
+                            </option>
+                        ))}
+                    </select>
+                    <select defaultValue="" ref={mainKeywordRef}>
+                        <option value="" disabled style={{ display: "none" }}>
+                            메인 키워드
+                        </option>
+                        {mainKeywords.keywords.map((keyword, index) => (
+                            <option value={keyword} key={index}>
+                                {keyword}
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 <input
                     type="text"
                     placeholder="제목을 입력해주세요."

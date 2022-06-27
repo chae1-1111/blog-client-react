@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { Buffer } from "buffer";
 
 import { FaRegHeart, FaHeart, FaRegComment, FaEllipsisV } from "react-icons/fa";
 
@@ -24,6 +25,7 @@ interface postProps {
     Category: string;
     Keyword: string[];
     Replys: number;
+    ProfileImage: string;
 }
 
 interface reply {
@@ -35,6 +37,7 @@ interface reply {
     UserId: string;
     isWriter: boolean;
     Created: string;
+    ProfileImage: string;
 }
 
 const PostDetail: Function = (props: PropsType) => {
@@ -49,6 +52,7 @@ const PostDetail: Function = (props: PropsType) => {
     useEffect(() => {
         getPostDetail();
         getReplyList();
+        incViews();
     }, []);
 
     useEffect(() => {
@@ -106,7 +110,16 @@ const PostDetail: Function = (props: PropsType) => {
                     alert("존재하지 않는 게시글입니다.");
                     window.location.href = `/blog/${props.userid}`;
                 }
-                setPost(result.data.data);
+                console.log(result);
+                setPost({
+                    ...result.data.data,
+                    ProfileImage:
+                        result.data.data.profileImage === ""
+                            ? result.data.data.profileImage
+                            : new Buffer(
+                                  result.data.data.profileImage.data
+                              ).toString("base64"),
+                });
             }
         } catch (err) {
             console.log(err);
@@ -150,7 +163,19 @@ const PostDetail: Function = (props: PropsType) => {
                 }&userkey=${sessionStorage.getItem("UserKey")}`,
                 { headers: { Authorization: config.apikey } }
             );
-            setReplys(result.data.data);
+            let temp = [] as reply[];
+            for (const reply of result.data.data) {
+                temp.push({
+                    ...reply,
+                    ProfileImage:
+                        reply.profileImage === ""
+                            ? reply.profileImage
+                            : new Buffer(reply.profileImage.data).toString(
+                                  "base64"
+                              ),
+                });
+            }
+            setReplys(temp);
         } catch (err) {
             alert("잠시 후 다시 시도해주세요.");
             console.log(err);
@@ -318,16 +343,22 @@ const PostDetail: Function = (props: PropsType) => {
                         </a>
                         <div className="post-title">{post.Title}</div>
                         <div className="post-info">
-                            <div>
-                                <a
-                                    className="post-name"
-                                    href={`/blog/${post.UserId}`}
-                                >
-                                    {post.Name}
+                            <div className="post-profile">
+                                <a href={`/blog/${post.UserId}`}>
+                                    <img
+                                        className="image"
+                                        src={
+                                            "data:image/*;base64," +
+                                            post.ProfileImage
+                                        }
+                                    />
                                 </a>
-                                <span className="post-created">
-                                    {dateTimeFormatter(post.Created)}
-                                </span>
+                                <div className="post-profile-right">
+                                    <a className="post-name">{post.Name}</a>
+                                    <span className="post-created">
+                                        {dateTimeFormatter(post.Created)}
+                                    </span>
+                                </div>
                             </div>
                             <div className="post-menu">
                                 <FaEllipsisV
@@ -411,7 +442,7 @@ const PostDetail: Function = (props: PropsType) => {
                                 </span>
                             </div>
                         </div>
-                        <div className="post-reply-wrap">
+                        <div className="post-replys-wrap">
                             <p className="post-reply-list-title">댓글</p>
                             {props.isLogin ? (
                                 <div className="post-reply-input-wrap">
@@ -463,64 +494,86 @@ const PostDetail: Function = (props: PropsType) => {
                                         !reply.Deleted ? (
                                             reply.ReplyKey !== editReplyKey ? (
                                                 <div
-                                                    className="post-reply"
+                                                    className="post-reply-wrap"
                                                     key={index}
                                                 >
-                                                    <div className="post-reply-top">
-                                                        <a
-                                                            href={`/blog/${reply.UserId}`}
-                                                            className="post-reply-name"
-                                                        >
-                                                            {reply.Name}
-                                                        </a>
-                                                        <div className="post-reply-actions">
-                                                            {reply.isWriter ? (
-                                                                <>
-                                                                    <span
-                                                                        className="post-reply-action edit"
-                                                                        onClick={async () => {
-                                                                            await setEditReplyKey(
-                                                                                reply.ReplyKey
-                                                                            );
-                                                                            await replyEditEvent();
-                                                                            replyEditContent.current.focus();
-                                                                        }}
-                                                                    >
-                                                                        수정
+                                                    <a
+                                                        href={`/blog/${reply.UserId}`}
+                                                    >
+                                                        <img
+                                                            className="image"
+                                                            src={
+                                                                "data:image/*;base64," +
+                                                                reply.ProfileImage
+                                                            }
+                                                        />
+                                                    </a>
+                                                    <div className="post-reply">
+                                                        <div className="post-reply-top">
+                                                            <a
+                                                                href={`/blog/${reply.UserId}`}
+                                                                className="post-reply-name"
+                                                            >
+                                                                {reply.Name}
+                                                            </a>
+                                                            <div className="post-reply-actions">
+                                                                {reply.isWriter ? (
+                                                                    <>
+                                                                        <span
+                                                                            className="post-reply-action edit"
+                                                                            onClick={async () => {
+                                                                                await setEditReplyKey(
+                                                                                    reply.ReplyKey
+                                                                                );
+                                                                                await replyEditEvent();
+                                                                                replyEditContent.current.focus();
+                                                                            }}
+                                                                        >
+                                                                            수정
+                                                                        </span>
+                                                                        <span
+                                                                            className="post-reply-action delete"
+                                                                            onClick={() =>
+                                                                                deleteReply(
+                                                                                    reply.ReplyKey
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            삭제
+                                                                        </span>
+                                                                    </>
+                                                                ) : (
+                                                                    <span className="post-reply-action report">
+                                                                        신고
                                                                     </span>
-                                                                    <span
-                                                                        className="post-reply-action delete"
-                                                                        onClick={() =>
-                                                                            deleteReply(
-                                                                                reply.ReplyKey
-                                                                            )
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="post-reply-content">
+                                                            {reply.Content.split(
+                                                                "\n"
+                                                            ).map(
+                                                                (
+                                                                    line,
+                                                                    index
+                                                                ) => (
+                                                                    <p
+                                                                        key={
+                                                                            index
                                                                         }
                                                                     >
-                                                                        삭제
-                                                                    </span>
-                                                                </>
-                                                            ) : (
-                                                                <span className="post-reply-action report">
-                                                                    신고
-                                                                </span>
+                                                                        {line}
+                                                                        <br />
+                                                                    </p>
+                                                                )
                                                             )}
                                                         </div>
+                                                        <p className="post-reply-created">
+                                                            {dateTimeFormatter(
+                                                                reply.Created
+                                                            )}
+                                                        </p>
                                                     </div>
-                                                    <div className="post-reply-content">
-                                                        {reply.Content.split(
-                                                            "\n"
-                                                        ).map((line, index) => (
-                                                            <p key={index}>
-                                                                {line}
-                                                                <br />
-                                                            </p>
-                                                        ))}
-                                                    </div>
-                                                    <p className="post-reply-created">
-                                                        {dateTimeFormatter(
-                                                            reply.Created
-                                                        )}
-                                                    </p>
                                                 </div>
                                             ) : (
                                                 <div
