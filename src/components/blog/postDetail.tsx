@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Buffer } from "buffer";
 
 import { FaRegHeart, FaHeart, FaRegComment, FaEllipsisV } from "react-icons/fa";
+import { BsArrowReturnRight } from "react-icons/bs";
 
 import config from "../../config/config.json";
 
@@ -31,7 +32,7 @@ interface postProps {
 interface reply {
     Content: string;
     Deleted: boolean;
-    Group: number;
+    Group: string;
     Name: string;
     ReplyKey: number;
     UserId: string;
@@ -45,7 +46,9 @@ const PostDetail: Function = (props: PropsType) => {
     const [replys, setReplys] = useState([] as reply[]);
     const [replyLength, setReplyLength] = useState(0);
     const [replyEditLength, setReplyEditLength] = useState(0);
+    const [nestedReplyLength, setNestedReplyLength] = useState(0);
     const [editReplyKey, setEditReplyKey] = useState(-1);
+    const [nestedReplyKey, setNestedReplyKey] = useState(-1);
     const [likeButtonActive, setLikeButtonActive] = useState(!props.isLogin);
     const [postMenuActive, setPostMenuActive] = useState(false);
 
@@ -77,8 +80,12 @@ const PostDetail: Function = (props: PropsType) => {
         useRef() as React.MutableRefObject<HTMLTextAreaElement>;
     const replyEditContent =
         useRef() as React.MutableRefObject<HTMLTextAreaElement>;
+    const nestedReplyContent =
+        useRef() as React.MutableRefObject<HTMLTextAreaElement>;
     const replyButton = useRef() as React.MutableRefObject<HTMLAnchorElement>;
     const replyEditButton =
+        useRef() as React.MutableRefObject<HTMLAnchorElement>;
+    const nestedReplyButton =
         useRef() as React.MutableRefObject<HTMLAnchorElement>;
     const postMenu = useRef() as React.MutableRefObject<HTMLDivElement>;
 
@@ -110,7 +117,6 @@ const PostDetail: Function = (props: PropsType) => {
                     alert("존재하지 않는 게시글입니다.");
                     window.location.href = `/blog/${props.userid}`;
                 }
-                console.log(result);
                 setPost({
                     ...result.data.data,
                     ProfileImage:
@@ -168,7 +174,7 @@ const PostDetail: Function = (props: PropsType) => {
                 temp.push({
                     ...reply,
                     ProfileImage:
-                        reply.profileImage === ""
+                        !reply.profileImage && reply.profileImage === ""
                             ? reply.profileImage
                             : new Buffer(reply.profileImage.data).toString(
                                   "base64"
@@ -198,6 +204,7 @@ const PostDetail: Function = (props: PropsType) => {
                 {
                     userkey: sessionStorage.getItem("UserKey"),
                     postkey: props.postKey,
+                    group: props.postKey,
                     content: content,
                 },
                 { headers: { Authorization: config.apikey } }
@@ -243,6 +250,39 @@ const PostDetail: Function = (props: PropsType) => {
                 replyEditContent.current.value = "";
                 setReplyEditLength(0);
                 setEditReplyKey(-1);
+            }
+        } catch (err) {
+            console.log(err);
+            alert("잠시 후 다시 시도해주세요.");
+        }
+    };
+
+    const newNestedReply = async () => {
+        let content = nestedReplyContent.current.value;
+        if (content.trim().length === 0) {
+            alert("답글 내용을 작성해주세요");
+            nestedReplyContent.current.focus();
+            return;
+        } else if (content.length > 1000) {
+            alert("답글은 최대 1000자까지만 입력해주세요");
+            return;
+        }
+        try {
+            let result = await axios.post(
+                `${config.baseurl}/post/reply`,
+                {
+                    userkey: sessionStorage.getItem("UserKey"),
+                    postkey: props.postKey,
+                    group: "reply" + nestedReplyKey,
+                    content: content,
+                },
+                { headers: { Authorization: config.apikey } }
+            );
+            if (result.status === 200) {
+                await getReplyList();
+                nestedReplyContent.current.value = "";
+                await setReplyLength(0);
+                await setNestedReplyKey(-1);
             }
         } catch (err) {
             console.log(err);
@@ -311,6 +351,26 @@ const PostDetail: Function = (props: PropsType) => {
                 ? "post-reply-submit active"
                 : "post-reply-submit";
         setReplyEditLength(replyEditContent.current.value.length);
+    };
+
+    const nestedReplyEvent = () => {
+        nestedReplyButton.current.className =
+            nestedReplyContent.current.value.trim().length !== 0
+                ? "post-reply-submit active"
+                : "post-reply-submit";
+        setNestedReplyLength(nestedReplyContent.current.value.length);
+    };
+
+    const hideReplyEdit = (e: any) => {
+        if (e.key === "Escape") {
+            setEditReplyKey(-1);
+        }
+    };
+
+    const hideNestedReply = (e: any) => {
+        if (e.key === "Escape") {
+            setNestedReplyKey(-1);
+        }
     };
 
     const dateTimeFormatter = (d: string) => {
@@ -489,98 +549,367 @@ const PostDetail: Function = (props: PropsType) => {
                             )}
                             <div className="post-reply-list">
                                 {replys
-                                    .filter((r) => r.Group === props.postKey)
-                                    .map((reply, index) =>
-                                        !reply.Deleted ? (
-                                            reply.ReplyKey !== editReplyKey ? (
+                                    .filter(
+                                        (r) =>
+                                            r.Group === props.postKey.toString()
+                                    )
+                                    .map((reply, index) => (
+                                        <div key={index}>
+                                            {!reply.Deleted ? (
+                                                <div className="post-reply-wrap">
+                                                    {reply.ReplyKey !==
+                                                    editReplyKey ? (
+                                                        <div className="post-reply">
+                                                            <a
+                                                                href={`/blog/${reply.UserId}`}
+                                                            >
+                                                                <img
+                                                                    className="image"
+                                                                    src={
+                                                                        "data:image/*;base64," +
+                                                                        reply.ProfileImage
+                                                                    }
+                                                                />
+                                                            </a>
+                                                            <div className="post-reply">
+                                                                <div className="post-reply-top">
+                                                                    <a
+                                                                        href={`/blog/${reply.UserId}`}
+                                                                        className="post-reply-name"
+                                                                    >
+                                                                        {
+                                                                            reply.Name
+                                                                        }
+                                                                    </a>
+                                                                    <div className="post-reply-actions">
+                                                                        <span
+                                                                            className="post-reply-action nested-reply"
+                                                                            onClick={async () => {
+                                                                                await setNestedReplyKey(
+                                                                                    reply.ReplyKey
+                                                                                );
+                                                                                await nestedReplyContent.current.addEventListener(
+                                                                                    "keydown",
+                                                                                    hideNestedReply
+                                                                                );
+                                                                                nestedReplyContent.current.focus();
+                                                                            }}
+                                                                        >
+                                                                            답글
+                                                                        </span>
+                                                                        {reply.isWriter ? (
+                                                                            <>
+                                                                                <span
+                                                                                    className="post-reply-action edit"
+                                                                                    onClick={async () => {
+                                                                                        await setEditReplyKey(
+                                                                                            reply.ReplyKey
+                                                                                        );
+                                                                                        await replyEditEvent();
+                                                                                        await replyEditContent.current.addEventListener(
+                                                                                            "keydown",
+                                                                                            hideReplyEdit
+                                                                                        );
+                                                                                        replyEditContent.current.focus();
+                                                                                    }}
+                                                                                >
+                                                                                    수정
+                                                                                </span>
+                                                                                <span
+                                                                                    className="post-reply-action delete"
+                                                                                    onClick={() =>
+                                                                                        deleteReply(
+                                                                                            reply.ReplyKey
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    삭제
+                                                                                </span>
+                                                                            </>
+                                                                        ) : (
+                                                                            <span className="post-reply-action report">
+                                                                                신고
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="post-reply-content">
+                                                                    {reply.Content.split(
+                                                                        "\n"
+                                                                    ).map(
+                                                                        (
+                                                                            line,
+                                                                            index
+                                                                        ) => (
+                                                                            <p
+                                                                                key={
+                                                                                    index
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    line
+                                                                                }
+                                                                                <br />
+                                                                            </p>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                                <p className="post-reply-created">
+                                                                    {dateTimeFormatter(
+                                                                        reply.Created
+                                                                    )}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="post-reply">
+                                                            <div className="post-reply-edit-wrap">
+                                                                <div className="post-reply-input-content">
+                                                                    <span className="post-reply-input-name">
+                                                                        {sessionStorage.getItem(
+                                                                            "Name"
+                                                                        )}
+                                                                    </span>
+                                                                    <span
+                                                                        className={`post-reply-length ${
+                                                                            replyEditLength ===
+                                                                            0
+                                                                                ? " none"
+                                                                                : ""
+                                                                        }`}
+                                                                    >
+                                                                        <span
+                                                                            className={
+                                                                                replyEditLength >
+                                                                                1000
+                                                                                    ? "toolong"
+                                                                                    : ""
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                replyEditLength
+                                                                            }
+                                                                        </span>
+                                                                        /1000
+                                                                    </span>
+                                                                    <textarea
+                                                                        className="post-reply-input"
+                                                                        placeholder="댓글을 남겨보세요."
+                                                                        ref={
+                                                                            replyEditContent
+                                                                        }
+                                                                        onChange={() =>
+                                                                            replyEditEvent()
+                                                                        }
+                                                                        defaultValue={
+                                                                            reply.Content
+                                                                        }
+                                                                    ></textarea>
+                                                                </div>
+                                                                <a
+                                                                    className="post-reply-submit"
+                                                                    onClick={() => {
+                                                                        editReply();
+                                                                    }}
+                                                                    ref={
+                                                                        replyEditButton
+                                                                    }
+                                                                >
+                                                                    등록
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ) : replys.filter(
+                                                  (r) =>
+                                                      r.Group.toString() ===
+                                                          "reply" +
+                                                              reply.ReplyKey &&
+                                                      !r.Deleted
+                                              ).length === 0 ? null : (
                                                 <div
                                                     className="post-reply-wrap"
                                                     key={index}
                                                 >
-                                                    <a
-                                                        href={`/blog/${reply.UserId}`}
+                                                    <p className="deleted">
+                                                        삭제된 댓글입니다.
+                                                    </p>
+                                                </div>
+                                            )}
+                                            {replys
+                                                .filter(
+                                                    (r) =>
+                                                        r.Group.toString() ===
+                                                            "reply" +
+                                                                reply.ReplyKey &&
+                                                        !r.Deleted
+                                                )
+                                                .map((nestedReply, index) => (
+                                                    <div
+                                                        className="post-reply-wrap nested-reply-wrap"
+                                                        key={index}
                                                     >
-                                                        <img
-                                                            className="image"
-                                                            src={
-                                                                "data:image/*;base64," +
-                                                                reply.ProfileImage
-                                                            }
+                                                        <BsArrowReturnRight
+                                                            className="post-nested-reply-icon"
+                                                            size={20}
                                                         />
-                                                    </a>
-                                                    <div className="post-reply">
-                                                        <div className="post-reply-top">
-                                                            <a
-                                                                href={`/blog/${reply.UserId}`}
-                                                                className="post-reply-name"
-                                                            >
-                                                                {reply.Name}
-                                                            </a>
-                                                            <div className="post-reply-actions">
-                                                                {reply.isWriter ? (
-                                                                    <>
-                                                                        <span
-                                                                            className="post-reply-action edit"
-                                                                            onClick={async () => {
-                                                                                await setEditReplyKey(
-                                                                                    reply.ReplyKey
-                                                                                );
-                                                                                await replyEditEvent();
-                                                                                replyEditContent.current.focus();
-                                                                            }}
+                                                        {editReplyKey !==
+                                                        nestedReply.ReplyKey ? (
+                                                            <div className="post-reply">
+                                                                <a
+                                                                    href={`/blog/${nestedReply.UserId}`}
+                                                                >
+                                                                    <img
+                                                                        className="image"
+                                                                        src={
+                                                                            "data:image/*;base64," +
+                                                                            nestedReply.ProfileImage
+                                                                        }
+                                                                    />
+                                                                </a>
+                                                                <div className="post-reply">
+                                                                    <div className="post-reply-top">
+                                                                        <a
+                                                                            href={`/blog/${nestedReply.UserId}`}
+                                                                            className="post-reply-name"
                                                                         >
-                                                                            수정
-                                                                        </span>
+                                                                            {
+                                                                                nestedReply.Name
+                                                                            }
+                                                                        </a>
+                                                                        <div className="post-reply-actions">
+                                                                            {nestedReply.isWriter ? (
+                                                                                <>
+                                                                                    <span
+                                                                                        className="post-reply-action edit"
+                                                                                        onClick={async () => {
+                                                                                            await setEditReplyKey(
+                                                                                                nestedReply.ReplyKey
+                                                                                            );
+                                                                                            await replyEditEvent();
+                                                                                            await replyEditContent.current.addEventListener(
+                                                                                                "keydown",
+                                                                                                hideReplyEdit
+                                                                                            );
+                                                                                            replyEditContent.current.focus();
+                                                                                        }}
+                                                                                    >
+                                                                                        수정
+                                                                                    </span>
+                                                                                    <span
+                                                                                        className="post-reply-action delete"
+                                                                                        onClick={() =>
+                                                                                            deleteReply(
+                                                                                                nestedReply.ReplyKey
+                                                                                            )
+                                                                                        }
+                                                                                    >
+                                                                                        삭제
+                                                                                    </span>
+                                                                                </>
+                                                                            ) : (
+                                                                                <span className="post-reply-action report">
+                                                                                    신고
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="post-reply-content">
+                                                                        {nestedReply.Content.split(
+                                                                            "\n"
+                                                                        ).map(
+                                                                            (
+                                                                                line,
+                                                                                index
+                                                                            ) => (
+                                                                                <p
+                                                                                    key={
+                                                                                        index
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        line
+                                                                                    }
+                                                                                    <br />
+                                                                                </p>
+                                                                            )
+                                                                        )}
+                                                                    </div>
+                                                                    <p className="post-reply-created">
+                                                                        {dateTimeFormatter(
+                                                                            nestedReply.Created
+                                                                        )}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="post-nested-reply-wrap">
+                                                                <div className="post-reply-input-content">
+                                                                    <span className="post-reply-input-name">
+                                                                        {sessionStorage.getItem(
+                                                                            "Name"
+                                                                        )}
+                                                                    </span>
+                                                                    <span
+                                                                        className={`post-reply-length ${
+                                                                            replyEditLength ===
+                                                                            0
+                                                                                ? " none"
+                                                                                : ""
+                                                                        }`}
+                                                                    >
                                                                         <span
-                                                                            className="post-reply-action delete"
-                                                                            onClick={() =>
-                                                                                deleteReply(
-                                                                                    reply.ReplyKey
-                                                                                )
+                                                                            className={
+                                                                                replyEditLength >
+                                                                                1000
+                                                                                    ? "toolong"
+                                                                                    : ""
                                                                             }
                                                                         >
-                                                                            삭제
+                                                                            {
+                                                                                replyEditLength
+                                                                            }
                                                                         </span>
-                                                                    </>
-                                                                ) : (
-                                                                    <span className="post-reply-action report">
-                                                                        신고
+                                                                        /1000
                                                                     </span>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                        <div className="post-reply-content">
-                                                            {reply.Content.split(
-                                                                "\n"
-                                                            ).map(
-                                                                (
-                                                                    line,
-                                                                    index
-                                                                ) => (
-                                                                    <p
-                                                                        key={
-                                                                            index
+                                                                    <textarea
+                                                                        className="post-reply-input"
+                                                                        placeholder="답글을 남겨보세요."
+                                                                        ref={
+                                                                            replyEditContent
                                                                         }
-                                                                    >
-                                                                        {line}
-                                                                        <br />
-                                                                    </p>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                        <p className="post-reply-created">
-                                                            {dateTimeFormatter(
-                                                                reply.Created
-                                                            )}
-                                                        </p>
+                                                                        onChange={() =>
+                                                                            replyEditEvent()
+                                                                        }
+                                                                        defaultValue={
+                                                                            nestedReply.Content
+                                                                        }
+                                                                    ></textarea>
+                                                                </div>
+                                                                <a
+                                                                    className="post-reply-submit"
+                                                                    onClick={() => {
+                                                                        editReply();
+                                                                    }}
+                                                                    ref={
+                                                                        replyEditButton
+                                                                    }
+                                                                >
+                                                                    등록
+                                                                </a>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    className="post-reply"
-                                                    key={index}
-                                                >
-                                                    <div className="post-reply-edit-wrap">
+                                                ))}
+                                            {reply.ReplyKey ===
+                                                nestedReplyKey && (
+                                                <div className="post-nested-reply">
+                                                    <BsArrowReturnRight
+                                                        className="post-nested-reply-icon"
+                                                        size={20}
+                                                    />
+                                                    <div className="post-nested-reply-wrap">
                                                         <div className="post-reply-input-content">
                                                             <span className="post-reply-input-name">
                                                                 {sessionStorage.getItem(
@@ -589,7 +918,7 @@ const PostDetail: Function = (props: PropsType) => {
                                                             </span>
                                                             <span
                                                                 className={`post-reply-length ${
-                                                                    replyEditLength ===
+                                                                    nestedReplyLength ===
                                                                     0
                                                                         ? " none"
                                                                         : ""
@@ -597,58 +926,45 @@ const PostDetail: Function = (props: PropsType) => {
                                                             >
                                                                 <span
                                                                     className={
-                                                                        replyEditLength >
+                                                                        nestedReplyLength >
                                                                         1000
                                                                             ? "toolong"
                                                                             : ""
                                                                     }
                                                                 >
                                                                     {
-                                                                        replyEditLength
+                                                                        nestedReplyLength
                                                                     }
                                                                 </span>
                                                                 /1000
                                                             </span>
                                                             <textarea
                                                                 className="post-reply-input"
-                                                                placeholder="댓글을 남겨보세요."
+                                                                placeholder="답글을 남겨보세요."
                                                                 ref={
-                                                                    replyEditContent
+                                                                    nestedReplyContent
                                                                 }
                                                                 onChange={() =>
-                                                                    replyEditEvent()
-                                                                }
-                                                                defaultValue={
-                                                                    reply.Content
+                                                                    nestedReplyEvent()
                                                                 }
                                                             ></textarea>
                                                         </div>
                                                         <a
                                                             className="post-reply-submit"
                                                             onClick={() => {
-                                                                editReply();
+                                                                newNestedReply();
                                                             }}
                                                             ref={
-                                                                replyEditButton
+                                                                nestedReplyButton
                                                             }
                                                         >
                                                             등록
                                                         </a>
                                                     </div>
                                                 </div>
-                                            )
-                                        ) : replys.filter(
-                                              (r) =>
-                                                  r.Group.toString() ===
-                                                  "R" + reply.ReplyKey
-                                          ).length === 0 ? null : (
-                                            <div className="post-reply">
-                                                <p className="deleted">
-                                                    삭제된 댓글입니다.
-                                                </p>
-                                            </div>
-                                        )
-                                    )}
+                                            )}
+                                        </div>
+                                    ))}
                             </div>
                         </div>
                     </div>

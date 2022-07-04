@@ -490,128 +490,301 @@ div.blog-wrap {
                     }
                     .post-reply-list {
                         width: 100%;
+
+                        > div {
+                            .post-reply-wrap {
+                                border-bottom: 1px solid #ccc;
+                            }
+                            &:last-child {
+                                .post-reply-wrap:last-child {
+                                    border: unset;
+                                }
+                            }
+                        }
                         .post-reply-wrap {
                             display: flex;
-                            flex-direction: row;
-                            align-items: flex-start;
-                            border-bottom: 1px solid #ccc;
-
-                            &:last-child {
-                                border: unset;
-                            }
-
-                            img {
-                                width: 40px;
-                                height: 40px;
-                                border-radius: 20px;
-                                margin-top: 1rem;
-                            }
+                            flex-direction: column;
 
                             .post-reply {
-                                width: 100%;
-                                padding: 1rem 1.5rem 1rem 1rem;
-                                box-sizing: border-box;
                                 display: flex;
-                                flex-direction: column;
-                                justify-content: space-between;
-                                font-size: 0.9rem;
+                                flex-direction: row;
+                                align-items: flex-start;
 
-                                .post-reply-top {
+                                img {
+                                    width: 40px;
+                                    height: 40px;
+                                    border-radius: 20px;
+                                    margin-top: 1rem;
+                                }
+
+                                .post-reply {
+                                    width: 100%;
+                                    padding: 1rem 1.5rem 1rem 1rem;
+                                    box-sizing: border-box;
                                     display: flex;
-                                    flex-direction: row;
+                                    flex-direction: column;
                                     justify-content: space-between;
-                                    align-items: center;
-                                    .post-reply-name {
-                                        font-weight: bold;
+                                    font-size: 0.9rem;
+
+                                    .post-reply-top {
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: space-between;
+                                        align-items: center;
+                                        width: 100%;
+                                        .post-reply-name {
+                                            font-weight: bold;
+                                        }
+                                    }
+
+                                    p {
+                                        margin: unset;
+                                        margin-top: 0.5rem;
+
+                                        &.post-reply-created {
+                                            font-size: 0.85rem;
+                                            color: #777;
+                                        }
+                                    }
+
+                                    .post-reply-actions {
+                                        font-size: 0.8rem;
+                                        color: #999;
+
+                                        .post-reply-action {
+                                            margin-right: 0.3rem;
+
+                                            &:hover {
+                                                text-decoration: underline;
+                                            }
+
+                                            &:last-child {
+                                                margin: unset;
+                                            }
+                                        }
                                     }
                                 }
 
-                                p {
-                                    margin: unset;
-                                    margin-top: 0.5rem;
+                                .post-reply-edit-wrap {
+                                    border: 0.5px solid #ccc;
+                                    border-radius: 0.3rem;
+                                    padding: 0.7rem;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: flex-end;
+                                    width: 100%;
+                                    margin: 0.3rem 0;
 
-                                    &.post-reply-created {
-                                        font-size: 0.85rem;
-                                        color: #777;
-                                    }
-                                }
+                                    .post-reply-input-content {
+                                        width: 100%;
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: space-between;
+                                        flex-wrap: wrap;
+                                        margin-bottom: 0.7rem;
 
-                                .post-reply-actions {
-                                    font-size: 0.8rem;
-                                    color: #999;
-
-                                    .post-reply-action {
-                                        margin-right: 0.3rem;
-
-                                        &:hover {
-                                            text-decoration: underline;
+                                        .post-reply-input-name {
+                                            font-weight: bold;
+                                            font-size: 0.9rem;
                                         }
 
-                                        &:last-child {
+                                        .post-reply-length {
+                                            font-size: 0.8rem;
+                                            color: #777;
+
+                                            &.none {
+                                                display: none;
+                                            }
+
+                                            .toolong {
+                                                color: red;
+                                                font-weight: bold;
+                                            }
+                                        }
+
+                                        textarea.post-reply-input {
+                                            font-size: 0.9rem;
+                                            border: unset;
+                                            border-radius: unset;
                                             margin: unset;
+                                            width: 100%;
+                                            padding: unset;
+                                            height: unset;
+                                            resize: none;
+                                            overflow-wrap: break-word;
+                                        }
+                                    }
+
+                                    .post-reply-submit {
+                                        font-size: 0.9rem;
+                                        font-weight: bold;
+                                        color: #aaa;
+                                        padding: 0.5rem;
+                                        border-radius: 0.5rem;
+                                        &.active {
+                                            background-color: #ddd;
+                                            color: #000;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .deleted {
+                                color: #777;
+                                padding-left: 1rem;
+                            }
+
+                            &.nested-reply-wrap {
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: space-between;
+                                background-color: #fafafa;
+
+                                .post-nested-reply-icon {
+                                    margin: 1.5rem 0 0 1rem;
+                                }
+
+                                > .post-reply {
+                                    width: 93%;
+                                }
+
+                                .post-nested-reply-wrap {
+                                    border: 0.5px solid #ccc;
+                                    border-radius: 0.3rem;
+                                    padding: 0.7rem;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: flex-end;
+                                    width: 90%;
+
+                                    .post-reply-input-content {
+                                        width: 100%;
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: space-between;
+                                        flex-wrap: wrap;
+                                        margin-bottom: 0.7rem;
+
+                                        .post-reply-input-name {
+                                            font-weight: bold;
+                                            font-size: 0.9rem;
+                                        }
+
+                                        .post-reply-length {
+                                            font-size: 0.8rem;
+                                            color: #777;
+
+                                            &.none {
+                                                display: none;
+                                            }
+
+                                            .toolong {
+                                                color: red;
+                                                font-weight: bold;
+                                            }
+                                        }
+
+                                        textarea.post-reply-input {
+                                            font-size: 0.9rem;
+                                            border: unset;
+                                            border-radius: unset;
+                                            margin: unset;
+                                            width: 100%;
+                                            padding: unset;
+                                            height: unset;
+                                            resize: none;
+                                            overflow-wrap: break-word;
+                                            background-color: #fafafa;
+                                        }
+                                    }
+
+                                    .post-reply-submit {
+                                        font-size: 0.9rem;
+                                        font-weight: bold;
+                                        color: #aaa;
+                                        padding: 0.5rem;
+                                        border-radius: 0.5rem;
+                                        &.active {
+                                            background-color: #ddd;
+                                            color: #000;
                                         }
                                     }
                                 }
                             }
                         }
-
-                        .post-reply-edit-wrap {
-                            border: 0.5px solid #ccc;
-                            border-radius: 0.3rem;
-                            padding: 0.7rem;
+                        .post-nested-reply {
                             display: flex;
-                            flex-direction: column;
-                            align-items: flex-end;
+                            flex-direction: row;
+                            justify-content: space-between;
+                            margin-bottom: 0.3rem;
+                            border-bottom: 1px solid #ccc;
+                            padding: 0.3rem 0;
+                            background-color: #fafafa;
 
-                            .post-reply-input-content {
-                                width: 100%;
-                                display: flex;
-                                flex-direction: row;
-                                justify-content: space-between;
-                                flex-wrap: wrap;
-                                margin-bottom: 0.7rem;
-
-                                .post-reply-input-name {
-                                    font-weight: bold;
-                                    font-size: 0.9rem;
-                                }
-
-                                .post-reply-length {
-                                    font-size: 0.8rem;
-                                    color: #777;
-
-                                    &.none {
-                                        display: none;
-                                    }
-
-                                    .toolong {
-                                        color: red;
-                                        font-weight: bold;
-                                    }
-                                }
-
-                                textarea.post-reply-input {
-                                    font-size: 0.9rem;
-                                    border: unset;
-                                    border-radius: unset;
-                                    margin: unset;
-                                    width: 100%;
-                                    padding: unset;
-                                    height: unset;
-                                    resize: none;
-                                    overflow-wrap: break-word;
-                                }
+                            .post-nested-reply-icon {
+                                margin: 1rem 0 0 1rem;
                             }
 
-                            .post-reply-submit {
-                                font-size: 0.9rem;
-                                font-weight: bold;
-                                color: #aaa;
-                                padding: 0.5rem;
-                                border-radius: 0.5rem;
-                                &.active {
-                                    background-color: #ddd;
-                                    color: #000;
+                            .post-nested-reply-wrap {
+                                border: 0.5px solid #ccc;
+                                border-radius: 0.3rem;
+                                padding: 0.7rem;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: flex-end;
+                                width: 90%;
+
+                                .post-reply-input-content {
+                                    width: 100%;
+                                    display: flex;
+                                    flex-direction: row;
+                                    justify-content: space-between;
+                                    flex-wrap: wrap;
+                                    margin-bottom: 0.7rem;
+
+                                    .post-reply-input-name {
+                                        font-weight: bold;
+                                        font-size: 0.9rem;
+                                    }
+
+                                    .post-reply-length {
+                                        font-size: 0.8rem;
+                                        color: #777;
+
+                                        &.none {
+                                            display: none;
+                                        }
+
+                                        .toolong {
+                                            color: red;
+                                            font-weight: bold;
+                                        }
+                                    }
+
+                                    textarea.post-reply-input {
+                                        font-size: 0.9rem;
+                                        border: unset;
+                                        border-radius: unset;
+                                        margin: unset;
+                                        width: 100%;
+                                        padding: unset;
+                                        height: unset;
+                                        resize: none;
+                                        overflow-wrap: break-word;
+                                        background-color: #fafafa;
+                                    }
+                                }
+
+                                .post-reply-submit {
+                                    font-size: 0.9rem;
+                                    font-weight: bold;
+                                    color: #aaa;
+                                    padding: 0.5rem;
+                                    border-radius: 0.5rem;
+                                    &.active {
+                                        background-color: #ddd;
+                                        color: #000;
+                                    }
                                 }
                             }
                         }
