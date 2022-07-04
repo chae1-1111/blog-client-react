@@ -121,7 +121,11 @@ const Blog: Function = (props: BlogProps) => {
             let result = await axios.get(
                 `${config.baseurl}/member/getBlogInfo?userid=${
                     params.userid
-                }&userkey=${sessionStorage.getItem("UserKey")}`,
+                }&userkey=${
+                    sessionStorage.getItem("UserKey")
+                        ? sessionStorage.getItem("UserKey")
+                        : -1
+                }`,
                 { headers: { Authorization: config.apikey } }
             );
 
