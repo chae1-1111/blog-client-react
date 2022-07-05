@@ -582,21 +582,23 @@ const PostDetail: Function = (props: PropsType) => {
                                                                         }
                                                                     </a>
                                                                     <div className="post-reply-actions">
-                                                                        <span
-                                                                            className="post-reply-action nested-reply"
-                                                                            onClick={async () => {
-                                                                                await setNestedReplyKey(
-                                                                                    reply.ReplyKey
-                                                                                );
-                                                                                await nestedReplyContent.current.addEventListener(
-                                                                                    "keydown",
-                                                                                    hideNestedReply
-                                                                                );
-                                                                                nestedReplyContent.current.focus();
-                                                                            }}
-                                                                        >
-                                                                            답글
-                                                                        </span>
+                                                                        {props.isLogin && (
+                                                                            <span
+                                                                                className="post-reply-action nested-reply"
+                                                                                onClick={async () => {
+                                                                                    await setNestedReplyKey(
+                                                                                        reply.ReplyKey
+                                                                                    );
+                                                                                    await nestedReplyContent.current.addEventListener(
+                                                                                        "keydown",
+                                                                                        hideNestedReply
+                                                                                    );
+                                                                                    nestedReplyContent.current.focus();
+                                                                                }}
+                                                                            >
+                                                                                답글
+                                                                            </span>
+                                                                        )}
                                                                         {reply.isWriter ? (
                                                                             <>
                                                                                 <span

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Buffer } from "buffer";
 
@@ -16,7 +16,7 @@ import {
     FaAngleRight,
 } from "react-icons/fa";
 import { AiOutlineUser } from "react-icons/ai";
-import { TbNotes, TbSettings } from "react-icons/tb";
+import { TbNotes, TbSettings, TbEqual } from "react-icons/tb";
 
 import "./blog.scss";
 import PostDetail from "./postDetail";
@@ -104,6 +104,8 @@ const Blog: Function = (props: BlogProps) => {
     );
 
     const [pages, setPages] = useState([] as number[]);
+
+    const categoryList = useRef() as React.MutableRefObject<HTMLDivElement>;
 
     const getPostList = async () => {
         let userkey = sessionStorage.getItem("UserKey");
@@ -196,15 +198,27 @@ const Blog: Function = (props: BlogProps) => {
                             <AiOutlineUser className="image" />
                         )}
                     </div>
-                    <p className="name">{blogInfo.Name}</p>
-                    <p className="email">{blogInfo.Email}</p>
+                    <div className="name-wrap">
+                        <p className="name">{blogInfo.Name}</p>
+                        <p className="email">{blogInfo.Email}</p>
+                    </div>
+                    <TbEqual
+                        className="category-menu"
+                        size={30}
+                        onClick={() => {
+                            categoryList.current.style.display =
+                                categoryList.current.style.display == "flex"
+                                    ? "none"
+                                    : "flex";
+                        }}
+                    />
                 </div>
                 {isOwner && (
                     <a className="nav-left-newPost" href="/newPost">
                         <FaPlus />글 쓰러 가기
                     </a>
                 )}
-                <div className="nav-left-list">
+                <div className="nav-left-list" ref={categoryList}>
                     <div>
                         <ul>
                             <li className="sub-title">
@@ -215,29 +229,28 @@ const Blog: Function = (props: BlogProps) => {
                                     </a>
                                 )}
                             </li>
-                            <a href={`/blog/${params.userid}`}>
-                                <li>
+                            <li>
+                                <a href={`/blog/${params.userid}`}>
                                     <TbNotes />
                                     {`전체 글 보기 (${
                                         blogInfo.CategoryInfo
                                             ? blogInfo.CategoryInfo.Total
                                             : 0
                                     })`}
-                                </li>
-                            </a>
+                                </a>
+                            </li>
                             {blogInfo.CategoryInfo &&
                                 blogInfo.CategoryInfo.eachCategory.map(
                                     (obj: any, index: number) => (
-                                        <a
-                                            href={`/blog/${params.userid}/${obj.Category}`}
-                                            key={index}
-                                        >
-                                            <li>
+                                        <li key={index}>
+                                            <a
+                                                href={`/blog/${params.userid}/${obj.Category}`}
+                                            >
                                                 <TbNotes />
                                                 {obj.Category +
                                                     ` (${obj.Count})`}
-                                            </li>
-                                        </a>
+                                            </a>
+                                        </li>
                                     )
                                 )}
                         </ul>
@@ -247,7 +260,17 @@ const Blog: Function = (props: BlogProps) => {
             <div className="blog-content-wrap">
                 {postKey === -1 ? (
                     <div className="blog-content">
-                        <h2>{category === "" ? "전체 글 보기" : category}</h2>
+                        <div className="category-title-wrap">
+                            <h2>
+                                {category === "" ? "전체 글 보기" : category}
+                            </h2>
+                            {isOwner && (
+                                <a className="nav-left-newPost" href="/newPost">
+                                    <FaPlus />
+                                    글쓰기
+                                </a>
+                            )}
+                        </div>
                         <ul className="post-list">
                             {posts.length === 0 && (
                                 <div className="no-result">

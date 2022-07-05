@@ -1,3 +1,9 @@
+@mixin mobile {
+    @media (max-width: 767px) {
+        @content;
+    }
+}
+
 textarea:focus-visible,
 input:focus-visible {
     outline-width: 0;
@@ -50,6 +56,10 @@ div.blog-wrap {
                 color: #aaa;
                 margin-block-start: unset;
             }
+
+            .category-menu {
+                display: none;
+            }
         }
 
         .nav-left-newPost {
@@ -91,8 +101,10 @@ div.blog-wrap {
                         font-size: 0.8rem;
                         color: #333;
                         margin: 0.8rem 0;
-                        display: flex;
-                        align-items: center;
+                        a {
+                            display: flex;
+                            align-items: center;
+                        }
 
                         &:hover {
                             text-decoration: underline;
@@ -124,6 +136,18 @@ div.blog-wrap {
             width: 90%;
             margin: 0 auto;
             position: relative;
+
+            .category-title-wrap {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+
+                a {
+                    display: none;
+                }
+            }
+
             ul.post-list {
                 list-style-type: none;
                 padding: unset;
@@ -795,6 +819,115 @@ div.blog-wrap {
     }
 }
 
+@include mobile {
+    /*브라우저 사이즈767px이하일때*/
+
+    div.blog-wrap {
+        flex-direction: column;
+
+        .nav-left {
+            width: 100%;
+
+            .nav-left-profile {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                text-align: left;
+                padding: 0.8rem;
+                margin: unset;
+                width: 100%;
+                justify-content: space-between;
+                border: unset;
+                border-bottom: 1px solid #ccc;
+
+                .profile-image {
+                    width: 50px;
+                    height: 50px;
+                    margin: unset;
+                    margin-right: 1rem;
+                }
+
+                .name-wrap {
+                    width: 70%;
+                }
+
+                .name {
+                    margin-block-start: unset;
+                    font-size: 1rem;
+                }
+
+                .email {
+                    margin-block-end: unset;
+                }
+
+                .category-menu {
+                    display: block;
+                }
+            }
+
+            .nav-left-newPost {
+                display: none;
+            }
+
+            .nav-left-list {
+                width: 100%;
+                margin-top: unset;
+                display: none;
+                border-left: unset;
+                border-right: unset;
+                border-top: unset;
+
+                > div ul {
+                    padding: unset;
+                    margin: unset;
+
+                    li {
+                        width: 100%;
+                        border-bottom: 1px solid #ccc;
+                        margin: unset;
+                        padding: 1rem;
+                        box-sizing: border-box;
+                        font-size: 1.1rem;
+
+                        &.sub-title {
+                            margin: unset;
+                            padding-right: 1rem;
+                        }
+
+                        &:last-child {
+                            border: unset;
+                        }
+                    }
+                }
+            }
+        }
+
+        .blog-content-wrap {
+            width: 100%;
+            margin-top: 25px;
+
+            .blog-content {
+                .category-title-wrap {
+                    a {
+                        display: flex;
+                        flex-direction: row;
+                        align-self: center;
+                        padding: 0.5rem;
+                        border: 1px solid #aaa;
+                        border-radius: 2rem;
+                        background-color: #fff;
+                    }
+                }
+                ul.post-list {
+                    li {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .new-post-wrap {
     display: flex;
     flex-direction: column;
@@ -826,6 +959,10 @@ div.blog-wrap {
             border: 1px solid #ccc;
             padding: 0.3rem;
             box-sizing: border-box;
+
+            &:first-child {
+                margin-right: 1rem;
+            }
         }
 
         input {

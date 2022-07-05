@@ -62,3 +62,9 @@ p.disable {
         padding: 70px 0;
     }
 }
+
+@media (max-width: 767px) {
+    .content-wrap .content {
+        padding-top: unset;
+    }
+}
